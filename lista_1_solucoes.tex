@@ -1,0 +1,218 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Do not alter this block of commands.  If you're proficient at LaTeX, you may include additional packages, create macros, etc. immediately below this block of commands, but make sure to NOT alter the header, margin, and comment settings here. 
+
+\documentclass[12pt]{article}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\definecolor{processblue}{cmyk}{0.96,0,0,0}
+\usepackage[margin=1in]{geometry} 
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools,amsthm,amssymb,amsfonts, enumitem, fancyhdr, color, comment, graphicx, environ}
+\pagestyle{fancy}
+\setlength{\headheight}{65pt}
+\newenvironment{problem}[2][Exercício]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{sol}
+    {\emph{}
+    }
+    {
+    \qed
+    }
+\specialcomment{com}{ \color{blue} \textbf{Comment:} }{\color{black}} %for instructor comments while grading
+\NewEnviron{probscore}{\marginpar{ \color{blue} \tiny Problem Score: \BODY \color{black} }}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Fill in the appropriate information below
+\lhead{IC0042}
+\lhead{Lista I}
+\rhead{Soluções}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Do not alter this block.
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{problem}{1}
+    Em duplas, prove que o seguinte enunciado é verdadeiro: para todo $k, r \in \mathbb{N}$, existe $N \in \mathbb{N}$ tal que toda $r$-coloração das arestas de $K_N$ contém uma cópia monocromática de $K_k$.
+\end{problem}
+\begin{sol}
+    Seja $A_0:=V(K_n)$, e escolha um vértice $v_1\in A_0$. Como $v_1$ incide em
+    $n-1$ arestas, cada uma colorida com uma das $r$ cores, pelo Princípio da Casa dos Pombos garante uma cor $c_1$ presente em pelo menos $(n-1)/r$ delas; construa os outros extremos dessas arestas no conjunto $A_1:=\{\,u\in A_0:\chi(v_1u)=c_1\,\}$, de modo que $|A_1|\ge (n-1)/r$ e toda aresta de $v_1$ a $A_1$ tem cor $c_1$. Repita o argumento \emph{dentro} de $A_1$: escolha $v_2\in A_1$, tome a cor $c_2$ dominante nas arestas de $v_2$ para $A_1$ e defina $A_2:=\{\,u\in A_1:\chi(v_2u)=c_2\,\}$, com $|A_2|\ge(|A_1|-1)/r$. Iterando, produza
+    vértices $v_1,\dots,v_t$, cores $c_1,\dots,c_t\in[r]$ e conjuntos encaixados
+    $A_0\supseteq A_1\supseteq\cdots\supseteq A_t$ tais que $v_i\in A_{i-1}$ e
+    $\chi(v_iu)=c_i$ para todo $u\in A_i$.
+     
+    Observe que para $i<j$ vale $\chi(v_iv_j)=c_i$. De fato, $v_j$ foi escolhido em $A_{j-1}\subseteq A_i$, e por construção toda aresta de $v_i$ para dentro de $A_i$ recebe a cor $c_i$; logo a cor de $v_iv_j$ é decidida pelo vértice de índice menor, sem qualquer influência de~$v_j$.
+
+    Por fim, garanta que o processo repita num número suficiente de vezes. Como cada passo satisfaz $|A_i|\ge(|A_{i-1}|-1)/r$, o conjunto encolhe por um fator de cerca de $r$ a cada rodada, mas permanece não-vazio enquanto restar espaço; escolhendo $n$ suficientemente grande, complete $t=r(k-1)+1$ rodadas. Entre as $t$ cores $c_1,\dots,c_t\in[r]$, aplique novamente o Princípio da Casa dos Pombos e obtenha uma cor $c$ que ocorre pelo menos $\lceil t/r\rceil\ge k$ vezes, pois, para $t$ e $k$ inteiros, $\lceil t/r\rceil\ge k\iff t/r>k-1\iff t>r(k-1)$. Construa os vértices correspondentes em $A \coloneqq \{\,v_i:c_i=c\,\}$, com $|A|\ge k$. Tomados quaisquer $v_i,v_j\in A$ com $i<j$, o parágrafo anterior fornece $\chi(v_iv_j)=c_i=c$; portanto, todas as arestas internas a $A$ têm cor $c$, e $A$ induz um $K_k$ monocromático.
+\end{sol}
+
+\begin{problem}{2}
+    Prove que o seguinte teorema é verdadeiro e faça as contas de maneira detalhada.
+    
+    \textbf{Teorema 1} (Erdős, 1947). $R(k) \ge 2^{k/2}$ para $k \ge 5$.
+\end{problem}
+\begin{sol}
+    Chame de ruim uma $2$-coloração de $E(K_n)$ que contenha alguma clique monocromática de tamanho $k$, e de boa qualquer outra. Como $K_n$ tem $\binom{n}{2}$ arestas e cada uma recebe independentemente uma de duas cores, existem $2^{\binom{n}{2}}$ colorações ao todo. Basta portanto provar que, para $n$ qualquer, as ruins são estritamente menor que esse total, pois nesse caso alguma coloração boa necessariamente sobra.
+
+    Fixe $S \subseteq V(K_n)$ com $|S| = k$ e conte as colorações que tornam $S$ monocromática. A cor de $S$ pode ser escolhida de duas maneiras e isso já fixa as $\binom{k}{2}$ arestas internas a $S$, ao passo que as demais $\binom{n}{2} - \binom{k}{2}$ permanecem livres, o que dá exatamente $2\cdot2^{\binom{n}{2} - \binom{k}{2}} = 2^{\binom{n}{2} - \binom{k}{2} + 1}$ colorações ao todo. Como uma coloração é ruim precisamente quando algum dos $\binom{n}{k}$ clique (subconjunto) de $k$ vértices é monocromático, e a cardinalidade de uma união nunca excede a soma das cardinalidades (cota da união), obtem-se que
+    \[
+        \#\{\text{ruins}\}\ \le\ \binom{n}{k}\,2^{\binom{n}{2} - \binom{k}{2}+1} < 2^{\binom{n}{2}}
+    \]
+
+    Divida agora por $2^{\binom{n}{2}}$, de modo que a desigualdade desejada assume a forma $\binom{n}{k}\,2^{\,1 -\binom{k}{2}} < 1$. Estime $\binom{n}{k}\le\bigl(\tfrac{en}{k}\bigr)^k$, o que decorre de $\binom{n}{k} \le n^k/k!$ junto com $k!\ge(k/e)^k$, e suponha $n \le 2^{k/2}$, obtendo $\binom{n}{k} \le \bigl(\tfrac{e}{k}\bigr)^k\,2^{\,k^2/2}$. Multiplicando por $2^{\,1-k(k-1)}$ e somando os expoentes de base dois, que resultam em $1+\tfrac{k}{2}$, conclua que
+    \[
+        \binom{n}{k}\,2^{\,1-\binom{k}{2}}\ \le\ \Bigl( \frac{e}{k} \Bigr)^k \, 2^{\, 1+k/2} \ = \ 2\Bigl(\frac{e\sqrt{2}}{k}\Bigr)^k.
+    \]
+
+    Verifique que essa quantidade é menor que $1$ quando $k \ge 5$. Como $e\sqrt{2} \approx 3{,}844 < k$ para todo $k \ge 4$, a base é menor que $1$ e a expressão decresce em $k$, bastando conferir o primeiro caso, no qual ela vale aproximadamente $0{,}537$. Em $k=4$ ela ainda valeria cerca de $1{,}706$, o que mostra que $k \ge 5$ é exatamente o limiar em que a conta fecha.
+
+    Tome enfim $n \coloneqq \lfloor 2^{k/2} \rfloor$, que satisfaz $n \le 2^{k/2}$ e também $n \ge k$ para todo $k \ge 5$. Existe então uma coloração boa de $K_n$, donde $K_n \not\to K_k$, e restrigindo essa coloração a $m \le n$ serve. Portanto $R(k) \ge \lfloor 2^{k/2}\rfloor+1 > 2^{k/2}$
+\end{sol}
+
+\begin{problem}{3}
+    Prove que a seguinte generalização é verdadeira.
+    
+    (Kővári-Sós-Turán)
+    \[
+        \mathrm{ex}(n, K_{s,t}) \le C(s,t) n^{2 - 1/s}.
+    \]
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{4}
+    Prove que o seguinte lema é verdadeiro.
+    
+    \textbf{Lema 1} (Pósa, 1962). Todo grafo conexo com $n$ vértices contém um caminho de comprimento
+    \[
+        \ell \ge \min\{2\delta(G), n-1\}.
+    \]
+    Equivalentemente, existe um caminho de comprimento pelo menos $2\delta(G)$, a menos que o grafo seja um caminho Hamiltoniano.
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{5}
+    Prove que o seguinte teorema é verdadeiro.
+    
+    \textbf{Teorema 2.} Sejam $n, t \in \mathbb{N}$ e seja $G$ um grafo livre de triângulos com $n$ vértices. Se
+    \[
+        e(G) \ge \frac{n^2}{4} - t,
+    \]
+    então $G$ contém um subgrafo bipartido com pelo menos $e(G) - t$ arestas.
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{6}
+    Prove que o seguinte teorema é verdadeiro.
+    
+    \textbf{Teorema 3.} Sejam $n, t \in \mathbb{N}$, e seja $G$ um grafo com $n$ vértices. Se $G$ é $t$-longe de ser bipartido, então há pelo menos
+    \[
+        \frac{n}{6} \left( e(G) + t - \frac{n^2}{4} \right)
+    \]
+    triângulos em $G$.
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{7}
+    Prove que o seguinte teorema é verdadeiro. Utilize uma prova diferente da apresentada no livro.
+    
+    \textbf{Teorema 4} (Gerencsér-Gyárfás, 1967).
+    \[
+        r(P_k) = \left\lceil \frac{3k}{2} \right\rceil
+    \]
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{8}
+    Decida se a seguinte afirmação é verdadeira ou falsa. Se for verdadeira, prove-a; se for falsa, apresente um contraexemplo: quaisquer eventos são mutuamente independentes se, e somente se, são dois a dois independentes.
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{9}
+    Prove que a seguinte proposição é verdadeira.
+    
+    \textbf{Proposição 1.} Se $X_1$ e $X_2$ são variáveis aleatórias independentes, então
+    \[
+        \mathbb{E}[X_1 \cdot X_2] = \mathbb{E}[X_1] \cdot \mathbb{E}[X_2].
+    \]
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{10}
+    Prove que o seguinte teorema é verdadeiro.
+    
+    \textbf{Teorema 5.} Para todo grafo $G$, temos
+    \[
+        \alpha(G) \ge \sum_{v \in V(G)} \frac{1}{1 + d(v)}.
+    \]
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{11}
+    Prove que o seguinte teorema é verdadeiro.
+    
+    \textbf{Teorema 6} (Desigualdade de Jensen). Seja $f \colon \mathbb{R} \to \mathbb{R}$ uma função convexa e $X$ uma variável aleatória finita tomando valores reais. Então
+    \[
+        \mathbb{E}[f(X)] \ge f(\mathbb{E}[X]).
+    \]
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{12}
+    Prove que o seguinte teorema de supersaturação fraca é verdadeiro: se
+    \[
+        e(G) \ge 2 \cdot \mathrm{ex}(n,H)
+    \]
+    então $G$ contém pelo menos $\mathrm{ex}(n,H)$ cópias de $H$.
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{13}
+    Utilize o Teorema 5 para provar que o seguinte resultado é verdadeiro (Teorema de Turán): se um grafo $G$ com $n$ vértices é livre de $K_r$ então
+    \[
+        e(G) \le \left( 1 - \frac{1}{r-1} \right) \frac{n^2}{2}.
+    \]
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{14}
+    Seja $\mathcal{A}$ uma família crescente de grafos. Prove que a função
+    \[
+        f(p) = \Pr(G(n,p) \in \mathcal{A})
+    \]
+    é crescente em $p$.
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+\begin{problem}{15}
+    Mostre que, para cada $d \in \mathbb{N}$ e qualquer função $\omega(n) \gg 1$ vale que
+    \[
+        \Pr(\delta(G(n,p)) \ge d) \to 
+        \begin{cases}
+            0, & \text{se } p \le \dfrac{\log n + (d-1)\log\log n - \omega(n)}{n}, \\[10pt]
+            1, & \text{se } p \ge \dfrac{\log n + (d-1)\log\log n + \omega(n)}{n},
+        \end{cases}
+    \]
+    quando $n \to \infty$.
+\end{problem}
+% \begin{sol}
+% \end{sol}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Do not alter anything below this line.
+\end{document}
