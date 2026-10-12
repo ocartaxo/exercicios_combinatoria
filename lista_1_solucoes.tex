@@ -93,8 +93,33 @@
     \]
     Equivalentemente, existe um caminho de comprimento pelo menos $2\delta(G)$, a menos que o grafo seja um caminho Hamiltoniano.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Vamos provar o lema por contradição. Tome um caminho máximo $P=\{v_0, v_1, \ldots, v_k\}$ em $G=(V,E)$ tal que $P$ possui $k$ arestas e $k+1$ vértices.
+    Suponha que $k < 2\delta(G)$ e $k < n-1$ em que $|V|=n$. Como $P$ é máximo, temos que todos os vizinhos de $v_0$ (conjunto $N(v_0)$) e $v_k$ (conjunto $N(v_k)$) estão em $P$.
+
+    Agora, tome $S=\{v_{i-1}|v_i\in N(v_0)\}$. Por definição, $|S|=|N(v_0)|\geq \delta(G)$.
+    Também é verdade que $|N(v_k)|\geq \delta(G)$. Assim, $|S|+|N(v_k)|\geq 2\delta(G)$.
+    
+    No entanto, tanto $S$ quanto $N(v_k)$ são subconjuntos de $P\setminus{v_k}$.
+    Podemos afirmar isso pois $v_k$ não pode ser vizinho dele próprio e $S$ não pode conter $v_k$ pela definição de $S$,
+    que exigiria que existisse um $v_{k+1}\in N(v_0)$ que não faz parte de $P$ (o que contradiria a maximalidade de $P$).
+    Isso significa que $|S\cup N(v_k)|\leq|P|-1 = k < 2\delta(G)$.
+    Como estabelecemos que $|S|+|N(v_k)|\geq 2\delta(G)$, temos, pelo princípio da casa dos pombos,
+    que $S\cap N(v_k)\neq \emptyset$.
+
+    Assim, sabemos que existe um $v_{i-1}\in S\cup N(v_k)$ tal que $v_{i-1}\in N(v_k)$ e $v_i \in N(v_0)$ (pela construção de $S$).
+
+    Isso significa que podemos construir um ciclo com todos os vértices de $P$ da seguinte forma:
+    $$C=\{v_0,v_1,\ldots,v_{i-1},v_k,v_{k-1},v_{k-2},\ldots,v_i,v_0\}$$
+
+    Nós sabemos que existe um vértice $v\in V\setminus P$ porque $k<n-1$.
+    Como $G$ é conexo, existe um caminho de $v$ para algum vértice em $C$.
+    Seja $v_j$ o vértice no caminho de $v$ para $C$ que é vizinho de algum vértice em $C$.
+
+    Podemos construir um caminho maior que $P$ ligando $v_j$ ao vértice de $C$ que é vizinho de $v_j$ e, em seguida,
+    percorrendo todo o resto do ciclo. Assim, encontramos um caminho maior que $P$, o que contradiz a maximalidade de $P$.
+    Portanto, nossa suposição de que $k < 2\delta(G)$ e $k < n-1$ deve ser falsa, e o lema é verdadeiro.    
+\end{sol}
 
 \begin{problem}{5}
     Prove que o seguinte teorema é verdadeiro.
