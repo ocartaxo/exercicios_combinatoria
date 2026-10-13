@@ -130,8 +130,59 @@
     \]
     então $G$ contém um subgrafo bipartido com pelo menos $e(G) - t$ arestas.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Seja $v_\Delta$ um vértice de grau máximo em $G$.
+    O subgrafo $A$ induzido por $N(v_\Delta)$ é evidentemente um conjunto independente.
+    Nós podemos afirmar isso pois, se houvesse uma aresta $uv\in E(A)$, teríamos um triângulo
+    formado por $u,v$ e $v_\Delta$, o que contradiz a hipótese de que $G$ é livre de triângulos.
+    Por construção, $|V(A)|=\Delta$ (em que $\Delta=\Delta(G)$) e $|E(A)|=0$.
+
+    Seja $B$ o subgrafo induzido por $V(G)\setminus N(v_\Delta)$,
+    temos que $V(B)$ é o complemento de $V(A)$, ou seja, $V(B)=V(G)\setminus N(v_\Delta)$.
+    Assim, $|V(B)|=n-\Delta$.
+
+    Nós temos que $V(A)$ e $V(B)$ formam uma partição de $V(G)$,
+    e que $V(A)$ é independente.
+    Assim, as arestas que impedem que $G$ seja bipartido são apenas as arestas entre vértices de $B$.
+    Vamos mostrar que existem, no máximo, $t$ dessas arestas.
+    Ao fazer isso, poderemos removê-las do grafo $G$ e obter um subgrafo bipartido com pelo menos $e(G)-t$ arestas.
+    
+    Seja $e(A,B)$ as arestas que ligam vértices de $A$ a vértices de $B$ no grafo $G$,
+    temos que $e(G)=e(A,B)+e(B)$, pois $e(A)=0$. Assim, $|e(G)|=|e(A,B)|+|e(B)|$.
+
+    Agora, vamos calcular a soma dos graus dos vértices de $B$. Nessa contagem, contamos as
+    arestas em $e(B)$ duas vezes (uma vez para cada extremidade) e as arestas em $e(A,B)$
+    uma vez (pois apenas uma extremidade está em $B$). Assim:
+    $$k=\sum_{v \in V(B)} d(v) = |e(B)| + |e(B)| + |e(A,B)|$$
+
+    Como $|e(G)|=|e(A,B)|+|e(B)|$, podemos substituir $|e(B)|+e(A,B)|$ na equação acima e obter:
+    $$k = |e(B)| + |e(G)|$$.
+
+    Podemos encontrar um limite superior para $k$ da seguinte forma:
+
+    Sabemos que $d(v)\leq \Delta$ para todo $v\in V(G)$, então:
+    $$k=\sum_{v \in V(B)} d(v) \leq |V(B)|\Delta = (n-\Delta)\Delta$$.
+
+    Pela desigualdade das médias aritmética e geométrica, temos que:
+    $(n-\Delta)\Delta \leq \frac{n^2}{4}$.
+
+    Assim, temos que:
+    $$k \leq (n-\Delta)\Delta \leq \frac{n^2}{4}$$.
+
+    Como $k=|e(B)| + |e(G)|$, temos que:
+    $$|e(B)| + |e(G)| \leq \frac{n^2}{4}$$.
+
+    Pela hipótese do teorema, temos que $|e(G)| \geq \frac{n^2}{4}-t$,
+    que equivale a $t \geq \frac{n^2}{4} - |e(G)|$.
+
+    Substituindo na desigualdade acima, temos que:
+    $t \geq |e(G)| - |e(G)| + |e(B)| = |e(B)|$. 
+
+    Dessa forma, existem no máximo $t$ arestas em $B$,
+    e podemos removê-las do grafo $G$ para obter um subgrafo bipartido com pelo menos
+    $e(G)-t$ arestas.
+
+\end{sol}
 
 \begin{problem}{6}
     Prove que o seguinte teorema é verdadeiro.
