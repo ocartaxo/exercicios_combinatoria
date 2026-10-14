@@ -204,8 +204,40 @@
         r(P_k) = \left\lceil \frac{3k}{2} \right\rceil
     \]
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+     Para provar que $r(P_k) = \left\lceil \frac{3k}{2} \right\rceil$, deve-se estabelecer o limite inferior e o limite superior separadamente. Lembre-se de que $P_k$ denota um caminho de comprimento $k$, possuindo portanto $k+1$ vértices.
+
+    Comece pelo limite inferior, $r(P_k) \ge \left\lceil \frac{3k}{2} \right\rceil$. Construa uma $2$-coloração (vermelho e azul) das arestas de um grafo completo $K_N$, onde $N = \left\lceil \frac{3k}{2} \right\rceil - 1$, que não contenha nenhum $P_k$ monocromático.
+    
+    Divida os $N$ vértices em dois conjuntos disjuntos, $A$ e $B$, tais que $|A| = k$ e $|B| = \left\lfloor \frac{k-1}{2} \right\rfloor$. Verifique que a soma das cardinalidades exaure $N$, pois $k + \left\lfloor \frac{k-1}{2} \right\rfloor = \left\lceil \frac{3k}{2} \right\rceil - 1 = N$. Colora todas as arestas internas de $A$ e internas de $B$ de vermelho, e todas as arestas entre $A$ e $B$ de azul.
+    
+    Analise os caminhos resultantes dessa construção. Qualquer caminho vermelho estará inteiramente contido em $A$ ou em $B$. Como o maior desses conjuntos é $A$, o número máximo de vértices em um caminho vermelho é $k$. Por outro lado, as arestas azuis formam um grafo bipartido completo entre $A$ e $B$. Um caminho azul deve, portanto, alternar estritamente entre os vértices de ambos os conjuntos. Sendo $|B|$ a menor partição, o caminho pode visitar no máximo todos os $|B|$ vértices de $B$ e, consequentemente, no máximo $|B| + 1$ vértices de $A$. O total de vértices desse caminho azul é no máximo $2|B| + 1 = 2\left\lfloor \frac{k-1}{2} \right\rfloor + 1 \le k$. Como nenhum caminho monocromático alcança $k+1$ vértices, fica provado o limite inferior.
+
+    Passe agora ao limite superior, $r(P_k) \le \left\lceil \frac{3k}{2} \right\rceil$. Tome $N = \left\lceil \frac{3k}{2} \right\rceil$ e suponha, por absurdo, que exista uma $2$-coloração de $K_N$ sem nenhum caminho monocromático de $k+1$ vértices.
+    
+    Pelo Lema de Cobertura de Caminhos (também conhecido como Lema de Gerencsér-Gyárfás), os vértices de qualquer grafo completo com arestas bicolores podem ser particionados em exatamente dois caminhos disjuntos de cores distintas. Seja então $V(K_N)$ coberto por um caminho vermelho $R = (v_1, \dots, v_r)$ e um caminho azul $B = (u_1, \dots, u_b)$, de tal forma que $r + b = N$. Dentre todas as partições válidas, escolha aquela que maximiza o tamanho $r$ do caminho vermelho.
+    
+    Como assumiu-se que não há caminhos monocromáticos de tamanho $k+1$, tem-se obrigatoriamente $r \le k$ e $b \le k$. Disso deduz-se o limite inferior para o tamanho de $B$:
+    \[
+        b = N - r \ \ge \ \left\lceil \frac{3k}{2} \right\rceil - k \ = \ \left\lceil \frac{k}{2} \right\rceil.
+    \]
+    
+    Pela escolha da partição que maximiza $R$, a aresta $v_r u_1$ não pode ser vermelha. Se o fosse, poder-se-ia estender $R$ para $v_1 \dots v_r u_1$ (passando a ter tamanho $r+1$) e reduzir $B$ para $u_2 \dots u_b$, violando a maximalidade de $r$. Assim, $v_r u_1$ deve ser necessariamente azul.
+    
+    Aplicando o mesmo raciocínio ao interior de $R$, não é possível inserir o vértice $u_1$ entre $v_i$ e $v_{i+1}$ usando apenas arestas vermelhas, pois isso também aumentaria o tamanho de $R$. Isso significa que, para cada par de vértices adjacentes em $R$, pelo menos uma das arestas que os liga a $u_1$ é azul. Logo, o vértice $u_1$ do caminho azul incide em pelo menos $\left\lceil \frac{r}{2} \right\rceil$ arestas azuis conectadas ao caminho vermelho $R$. O mesmo argumento vale para o vértice final $u_b$, que também deve ter pelo menos $\left\lceil \frac{r}{2} \right\rceil$ arestas azuis ligadas a $R$.
+    
+    Sendo as arestas de conexão maciçamente azuis nas pontas de $B$, cria-se um ciclo estrutural onde é possível mesclar os vértices de $B$ percorrendo atalhos azuis por dentro de $R$. O caminho azul resultante consegue visitar todos os $b$ vértices de $B$ e saltar por pelo menos $\left\lfloor \frac{r}{2} \right\rfloor + 1$ vértices de $R$. O total de vértices desse novo caminho azul formado será:
+    \[
+        b + \left\lfloor \frac{r}{2} \right\rfloor + 1 \ = \ N - r + \left\lfloor \frac{r}{2} \right\rfloor + 1 \ = \ N - \left\lceil \frac{r}{2} \right\rceil + 1.
+    \]
+    
+    Substituindo $N = k + \left\lceil \frac{k}{2} \right\rceil$, e sabendo que a restrição $r \le k$ implica $\left\lceil \frac{r}{2} \right\rceil \le \left\lceil \frac{k}{2} \right\rceil$, obtém-se o número mínimo de vértices:
+    \[
+        \left(k + \left\lceil \frac{k}{2} \right\rceil\right) - \left\lceil \frac{k}{2} \right\rceil + 1 \ = \ k + 1.
+    \]
+    
+    O grafo formará, inevitavelmente, um caminho azul de tamanho pelo menos $k+1$, o que entra em contradição direta com a premissa inicial de que nenhum caminho monocromático atingia esse comprimento. As duas extremidades provam, com exatidão, que $r(P_k) = \left\lceil \frac{3k}{2} \right\rceil$.
+\end{sol}
 
 \begin{problem}{8}
     Decida se a seguinte afirmação é verdadeira ou falsa. Se for verdadeira, prove-a; se for falsa, apresente um contraexemplo: quaisquer eventos são mutuamente independentes se, e somente se, são dois a dois independentes.
