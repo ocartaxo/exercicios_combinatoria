@@ -342,8 +342,58 @@
     \]
     quando $n \to \infty$.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    A probabilidade de um vértice específico ter grau $k$ segue uma distribuição binomial. Portanto, o valor esperado de $X_k$ é dado por:
+    \[\mathbb{E}[X_k] = n \binom{n-1}{k} p^k (1-p)^{n-1-k}.\]
+
+    Como $p = o(1)$ e $k$ é uma constante em relação a $n$, podemos aplicar aproximações assintóticas quando $n \to \infty$. 
+    Utilizando $\binom{n-1}{k} \sim \frac{n^k}{k!}$ e o limite $(1-p)^{n-1-k} \sim e^{-np}$, substituímos a forma geral de $p$ dada no teorema:
+    \[p = \frac{\log n + (d-1)\log\log n \pm \omega(n)}{n}.\]
+
+    O que nos dá a aproximação para a exponencial:
+    \[e^{-np} \sim \exp\left(-\log n - (d-1)\log\log n \mp \omega(n)\right) = \frac{e^{\mp \omega(n)}}{n (\log n)^{d-1}}.\]
+
+    Multiplicando os fatores de $\mathbb{E}[X_k]$, obtemos:
+    \[\mathbb{E}[X_k] \sim n \left(\frac{n^k}{k!}\right) \left(\frac{\log n}{n}\right)^k \frac{e^{\mp \omega(n)}}{n (\log n)^{d-1}} = \frac{(\log n)^{k - d + 1}}{k!} e^{\mp \omega(n)}.\]
+
+    Para qualquer $k < d - 1$, o expoente do logaritmo é negativo, fazendo com que $\mathbb{E}[X_k]$ tenda a zero muito mais rapidamente que o termo onde $k = d-1$. 
+    Logo, o número esperado total de vértices com grau menor que $d$ é assintoticamente dominado pelo termo $X_{d-1}$:
+    \[\mathbb{E}[X] \sim \mathbb{E}[X_{d-1}] \sim \frac{1}{(d-1)!} e^{\mp \omega(n)}.\]
+
+    Vamos demonstrar a primeira parte do teorema utilizando o Método do Primeiro Momento[cite: 2]. 
+    Suponha que $p \ge \frac{\log n + (d-1)\log\log n + \omega(n)}{n}$. O sinal associado a $\omega(n)$ no expoente é negativo. 
+    Como $\omega(n) \gg 1$, o termo $e^{-\omega(n)} \to 0$. Consequentemente:
+    \[\mathbb{E}[X] \sim \frac{1}{(d-1)!} e^{-\omega(n)} \to 0.\]
+
+    Pela Desigualdade de Markov, a probabilidade do grafo possuir pelo menos um vértice de grau menor que $d$ é limitada por[cite: 2]:
+    \[\Pr(X \ge 1) \le \mathbb{E}[X] \to 0.\]
+
+    Logo, subtraindo do evento complementar, temos:
+    \[\Pr(X = 0) = 1 - \Pr(X \ge 1) \to 1.\]
+    Isso prova que $\Pr(\delta(G(n,p)) \ge d) \to 1$.
+
+    Agora, vamos demonstrar a segunda parte utilizando o Método do Segundo Momento[cite: 2]. 
+    Suponha que $p \le \frac{\log n + (d-1)\log\log n - \omega(n)}{n}$. O sinal associado a $\omega(n)$ torna-se positivo, logo:
+    \[\mathbb{E}[X] \sim \frac{1}{(d-1)!} e^{\omega(n)} \to \infty.\]
+
+    Pela Desigualdade de Chebyshev, podemos limitar a probabilidade de $\{X = 0\}$ utilizando a variância[cite: 2]:
+    \[\Pr(X = 0) \le \frac{\text{Var}(X)}{(\mathbb{E}[X])^2} = \frac{\mathbb{E}[X^2]}{(\mathbb{E}[X])^2} - 1.\]
+
+    Para calcular $\mathbb{E}[X^2]$, abrimos a soma considerando os indicadores para cada vértice:
+    \[\mathbb{E}[X^2] = \mathbb{E}[X] + \sum_{u \neq v} \Pr(d_G(u) < d \text{ e } d_G(v) < d).\]
+
+    Como a dependência entre os graus de dois vértices distintos se limita à presença de apenas uma possível aresta $\{u,v\}$, os eventos são assintoticamente independentes[cite: 3]. 
+    Assim, a soma da probabilidade conjunta converge para:
+    \[\sum_{u \neq v} \Pr(d_G(u) < d \text{ e } d_G(v) < d) \sim n^2 (\Pr(d_G(u) < d))^2 \sim (\mathbb{E}[X])^2.\]
+
+    Substituindo este comportamento na inequação da variância, obtemos:
+    \[\frac{\mathbb{E}[X^2]}{(\mathbb{E}[X])^2} \sim \frac{\mathbb{E}[X] + (\mathbb{E}[X])^2}{(\mathbb{E}[X])^2} = \frac{1}{\mathbb{E}[X]} + 1.\]
+
+    Como já demonstramos que $\mathbb{E}[X] \to \infty$, o termo $\frac{1}{\mathbb{E}[X]} \to 0$. Isso resulta em:
+    \[\Pr(X = 0) \le \frac{1}{\mathbb{E}[X]} \to 0.\]
+
+    Portanto, concluímos que $\Pr(\delta(G(n,p)) \ge d) \to 0$, o que completa a demonstração rigorosa do teorema em ambos os limiares.
+\end{sol}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Do not alter anything below this line.
