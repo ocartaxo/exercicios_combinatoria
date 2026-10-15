@@ -81,8 +81,64 @@
         \mathrm{ex}(n, K_{s,t}) \le C(s,t) n^{2 - 1/s}.
     \]
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Seja $G$ um grafo com $n$ vértices e livre do subgrafo $K_{s,t}$.
+    Vamos contar o número de ``$s$-cerejas'' em $G$, que correspondem a cópias do grafo estrela $K_{1,s}$.
+    Para um vértice específico $v \in V(G)$, o número de cópias de $K_{1,s}$ centradas em $v$ é dado exatamente pela combinação $\binom{d_G(v)}{s}$.
+    Assim, o número total de $s$-cerejas presentes em todo o grafo $G$ é expresso pela soma:   
+    \[ 
+        \sum_{v \in V(G)} \binom{d_G(v)}{s}. 
+    \]
+
+    Podemos encontrar um limite superior para essa soma focando na outra extremidade dessas estrelas.
+    Como o grafo é livre de $K_{s,t}$, qualquer subconjunto de $s$ vértices pode ser vizinho em comum de, no máximo, $t-1$ vértices.
+    Dessa forma, o número total dessas $s$-cerejas é limitado superiormente por $(t-1)\binom{n}{s}$.
+    Portanto, temos a desigualdade:   
+    \[ 
+        \sum_{v \in V(G)} \binom{d_G(v)}{s} \le (t-1)\binom{n}{s}. 
+    \]
+
+    Agora, vamos encontrar um limite inferior para a soma dos graus utilizando a propriedade de convexidade.
+    Sabe-se que a função $\binom{x}{s}$ é estritamente convexa para valores de $x > s - 1$.
+    Devido a essa propriedade de convexidade, a soma total atinge o seu valor mínimo quando todos os vértices do grafo possuem graus iguais ao grau médio.
+    Sendo o grau médio $\frac{2|E(G)|}{n}$, a aplicação da convexidade formula a seguinte desigualdade:   
+    \[ 
+        n \binom{\frac{2|E(G)|}{n}}{s} \le \sum_{v \in V(G)} \binom{d_G(v)}{s}. 
+    \]
+
+    Combinando os limites inferior e superior estabelecidos para o número de $s$-cerejas, obtemos:
+    \[ 
+        n \binom{\frac{2|E(G)|}{n}}{s} \le (t-1)\binom{n}{s}. 
+    \]
+
+    Para simplificar essa expressão e extrair o limite do número de arestas, ao expressar os coeficientes binomiais como quocientes de fatoriais, a inequação pode ser simplificada para analisar seu termo dominante.
+    Aproximando $\binom{x}{s} \ge \frac{(x - (s-1))^s}{s!}$ e $\binom{n}{s} \le \frac{n^s}{s!}$, temos que:   
+    \[ 
+        n \left(\frac{2|E(G)|}{n} - (s-1)\right)^s \le (t-1)n^s. 
+    \]
+
+    Resolvendo a inequação para isolar o número de arestas:
+    Dividindo ambos os lados por $n$, obtemos:
+    \[ 
+        \left(\frac{2|E(G)|}{n} - (s-1)\right)^s \le (t-1)n^{s-1}. 
+    \]
+
+    Aplicando a raiz $s$-ésima em ambos os lados, resulta em:
+    \[ 
+        \frac{2|E(G)|}{n} - (s-1) \le (t-1)^{1/s} n^{1 - 1/s}. 
+    \]
+
+    Multiplicando por $n$ e dividindo por $2$, isolamos $|E(G)|$:
+    \[ 
+        |E(G)| \le \frac{1}{2} (t-1)^{1/s} n^{2 - 1/s} + \frac{s-1}{2} n. 
+    \]
+
+    Essa resolução comprova a limitação superior de arestas na ordem de $\mathcal{O}(n^{2 - 1/s})$.
+    Como $\mathrm{ex}(n, K_{s,t})$ é definido como o número máximo de arestas que um grafo com $n$ vértices pode ter sem conter um subgrafo $K_{s,t}$, podemos englobar as constantes na função $C(s,t)$ e concluir a generalização que:   
+    \[ 
+        \mathrm{ex}(n, K_{s,t}) \le C(s,t) n^{2 - 1/s}. 
+    \]
+\end{sol}
 
 \begin{problem}{4}
     Prove que o seguinte lema é verdadeiro.
