@@ -21,7 +21,7 @@
     }
 \specialcomment{com}{ \color{blue} \textbf{Comment:} }{\color{black}} %for instructor comments while grading
 \NewEnviron{probscore}{\marginpar{ \color{blue} \tiny Problem Score: \BODY \color{black} }}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Fill in the appropriate information below
@@ -134,8 +134,29 @@
 \begin{problem}{8}
     Decida se a seguinte afirmação é verdadeira ou falsa. Se for verdadeira, prove-a; se for falsa, apresente um contraexemplo: quaisquer eventos são mutuamente independentes se, e somente se, são dois a dois independentes.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Falsa. Faremos um contraexemplo.
+
+    Seja $E$ um experimento em que lançamos duas moedas independentes, e sejam os eventos
+    \begin{itemize}
+        \item $A$ = a primeira moeda dá coroa;
+        \item $B$ = a segunda moeda dá coroa;
+        \item $C$ = as duas moedas dão o mesmo resultado (coroa,coroa ou cara,cara).
+    \end{itemize}
+
+    Os eventos são dois a dois independentes:
+    \begin{itemize}
+        \item $P(A\cap B) = P(\text{coroa,coroa}) = \frac{1}{4} = P(A)\,P(B) = \frac{1}{2}\cdot\frac{1}{2}$;
+        \item $P(A\cap C) = P(\text{coroa,coroa}) = \frac{1}{4} = P(A)\,P(C) = \frac{1}{2}\cdot\frac{1}{2}$;
+        \item $P(B\cap C) = P(\text{coroa,coroa}) = \frac{1}{4} = P(B)\,P(C) = \frac{1}{2}\cdot\frac{1}{2}$.
+    \end{itemize}
+
+    No entanto, eles não são mutuamente independentes, pois
+    \[
+        P(A\cap B\cap C) = P(\text{coroa,coroa}) = \frac{1}{4}
+        \neq \frac{1}{8} = P(A)\,P(B)\,P(C).
+    \]
+\end{sol}
 
 \begin{problem}{9}
     Prove que a seguinte proposição é verdadeira.
@@ -145,8 +166,20 @@
         \mathbb{E}[X_1 \cdot X_2] = \mathbb{E}[X_1] \cdot \mathbb{E}[X_2].
     \]
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Sejam $X_1$ e $X_2$ variáveis aleatórias independentes com densidade conjunta $f_{X_1,X_2}$.
+    Então
+    \[
+        \mathbb{E}[X_1 \cdot X_2] = \int_{-\infty}^{\infty}\int_{-\infty}^{\infty} x\cdot y \cdot f_{X_1,X_2}(x,y)\,\mathrm{d}x\,\mathrm{d}y.
+    \]
+    Como $X_1$ e $X_2$ são independentes, $f_{X_1,X_2}(x,y) = f_{X_1}(x)\cdot f_{X_2}(y)$. Logo
+    \[
+        \int_{-\infty}^{\infty}\int_{-\infty}^{\infty} x\cdot y \cdot f_{X_1,X_2}(x,y)\,\mathrm{d}x\,\mathrm{d}y
+        = \left(\int_{-\infty}^{\infty} x\, f_{X_1}(x)\,\mathrm{d}x\right)
+          \left(\int_{-\infty}^{\infty} y\, f_{X_2}(y)\,\mathrm{d}y\right)
+        = \mathbb{E}[X_1]\cdot\mathbb{E}[X_2].
+    \]
+\end{sol}
 
 \begin{problem}{10}
     Prove que o seguinte teorema é verdadeiro.
@@ -156,8 +189,79 @@
         \alpha(G) \ge \sum_{v \in V(G)} \frac{1}{1 + d(v)}.
     \]
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Seja $\sigma: V(G)\rightarrow [n]$ uma ordenação dos $n$ vértices de $G$. Escolha uma dessas ordenações ao acaso, e seja
+    \[
+        A = \{ v\in V(G) \mid \sigma(v) < \min \sigma(N(v)) \},
+    \]
+    o conjunto de todos os vértices $v$ tais que todos os seus vizinhos estão em posições maiores que a de $v$.
+
+    Para deixar mais claro, alinhe os vértices em fila segundo a ordenação $\sigma$, como na Figura~\ref{fig:grafo}. Nesse caso, $A$ é o conjunto dos vértices $v$ que não se conectam a nenhum vértice à sua esquerda.
+
+    \begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[
+      vert/.style={circle, draw, minimum size=8mm, inner sep=0pt, font=\large},
+      emA/.style={vert, fill=blue!25},
+      nA/.style={vert, fill=white},
+      lab/.style={font=\small, below=4pt}
+    ]
+      % Vértices alinhados segundo a ordenação σ
+      \node[emA] (a) at (0,0) {$a$};
+      \node[emA] (b) at (2,0) {$b$};
+      \node[emA] (c) at (4,0) {$c$};
+      \node[nA]  (d) at (6,0) {$d$};
+      \node[nA]  (e) at (8,0) {$e$};
+      \node[nA]  (f) at (10,0) {$f$};
+
+      % Rótulos da ordenação σ
+      \node[lab] at (a.south) {$\sigma(a)=1$};
+      \node[lab] at (b.south) {$\sigma(b)=2$};
+      \node[lab] at (c.south) {$\sigma(c)=3$};
+      \node[lab] at (d.south) {$\sigma(d)=4$};
+      \node[lab] at (e.south) {$\sigma(e)=5$};
+      \node[lab] at (f.south) {$\sigma(f)=6$};
+
+      % Arestas de G
+      \draw[thick] (a) to[bend left=45] (d);
+      \draw[thick] (b) to[bend left=45] (d);
+      \draw[thick] (b) to[bend left=45] (e);
+      \draw[thick] (c) to[bend left=45] (e);
+      \draw[thick] (d) to[bend left=45] (f);
+    \end{tikzpicture}
+    \caption{Grafo $G$ com os vértices alinhados segundo $\sigma$. Os vértices azuis pertencem a $A=\{a,b,c\}$, pois não possuem vizinhos à sua esquerda.}
+    \label{fig:grafo}
+    \end{figure}
+
+    \textbf{$A$ é independente.} Suponha, por absurdo, que exista uma aresta $uv$ com $u,v\in A$. Sem perda de generalidade, $\sigma(u) < \sigma(v)$. Então $u \in N(v)$ e $\sigma(u)<\sigma(v)$, o que contradiz $v\in A$.
+
+    \textbf{Probabilidade de $v\in A$.} Temos $v\in A$ se, e somente se, $v$ é o menor elemento de $N[v] = N(v)\cup\{v\}$ segundo $\sigma$. Como a ordenação é escolhida ao acaso, cada um dos $|N[v]| = d(v)+1$ vértices de $N[v]$ tem a mesma chance de ser o menor. Portanto
+    \[
+        P(v\in A) = \frac{1}{d(v)+1}.
+    \]
+
+    \textbf{Cálculo da esperança.} Considere a variável indicadora $X_v$, que vale $1$ se $v\in A$ e $0$ caso contrário. Então
+    \[
+        |A| = \sum_{v\in V(G)} X_v.
+    \]
+    Pela linearidade da esperança,
+    \[
+        \mathbb{E}[|A|] = \sum_{v\in V(G)} \mathbb{E}[X_v].
+    \]
+    A esperança de uma variável indicadora é
+    \[
+        \mathbb{E}[X_v] = 0\cdot P(v\notin A) + 1\cdot P(v\in A) = \frac{1}{d(v)+1},
+    \]
+    e portanto
+    \[
+        \mathbb{E}[|A|] = \sum_{v\in V(G)} \frac{1}{d(v)+1}.
+    \]
+
+    \textbf{Conclusão.} Como $A$ é independente para qualquer ordenação $\sigma$, temos $\alpha(G)\geq |A|$ sempre. Tomando a esperança dos dois lados,
+    \[
+        \alpha(G) \geq \mathbb{E}[|A|] = \sum_{v\in V(G)} \frac{1}{1+d(v)}.
+    \]
+\end{sol}
 
 \begin{problem}{11}
     Prove que o seguinte teorema é verdadeiro.
@@ -167,8 +271,25 @@
         \mathbb{E}[f(X)] \ge f(\mathbb{E}[X]).
     \]
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Seja $x_0 = \mathbb{E}[X]$ e suponha, para simplificar, que $f$ é duas vezes diferenciável. Pela fórmula de Taylor com resto de Lagrange, para cada $x\in\mathbb{R}$ existe $\xi$ entre $x$ e $x_0$ tal que
+    \[
+        f(x) = f(x_0) + f'(x_0)(x-x_0) + f''(\xi)\frac{(x-x_0)^2}{2}.
+    \]
+    Como $f$ é convexa, $f''(\xi)\ge 0$. Definindo a reta tangente $L(x) := f(x_0) + f'(x_0)(x-x_0)$, obtemos
+    \[
+        f(x) \ge L(x) \quad \text{para todo } x\in\mathbb{R}.
+    \]
+    Substituindo $x$ por $X$ e aplicando a esperança (que preserva desigualdades), temos
+    \[
+        \mathbb{E}[f(X)] \ge \mathbb{E}[L(X)].
+    \]
+    Como $L$ é afim e a esperança é linear, $\mathbb{E}[L(X)] = f(x_0) + f'(x_0)\bigl(\mathbb{E}[X]-x_0\bigr) = f(x_0)$, pois $x_0 = \mathbb{E}[X]$. Portanto
+    \[
+        \mathbb{E}[f(X)] \ge f(x_0) = f(\mathbb{E}[X]).
+    \]
+    Observação: se $f$ não for duas vezes diferenciável, a mesma conclusão vale trocando $f'(x_0)$ por qualquer subderivada de $f$ em $x_0$, cuja existência decorre da convexidade.
+\end{sol}
 
 \begin{problem}{12}
     Prove que o seguinte teorema de supersaturação fraca é verdadeiro: se
@@ -192,24 +313,40 @@
 \begin{problem}{14}
     Seja $\mathcal{A}$ uma família crescente de grafos. Prove que a função
     \[
-        f(p) = \Pr(G(n,p) \in \mathcal{A})
+    f(p) = \mathbb{P}\big(G(n,p)\in\mathcal{A}\big)
     \]
     é crescente em $p$.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+Como $\mathcal{A}$ é crescente, basta mostrar que, para $0\le p\le p'\le 1$, vale $f(p)\le f(p')$.
 
-\begin{problem}{15}
-    Mostre que, para cada $d \in \mathbb{N}$ e qualquer função $\omega(n) \gg 1$ vale que
+Seja $N=\binom{n}{2}$ arestas e considere variáveis independentes $U_e\sim\text{Uniforme}[0,1]$, uma para cada aresta $e$ de $K_n$. Para cada $p\in[0,1]$, defina
+\[
+G_p := \{\, e\in E(K_n) : U_e\le p \,\}.
+\]
+
+
+     Perceba que $G_p$ tem a distribuição de $G(n,p)$. As arestas aparecem independentemente, e cada uma aparece com probabilidade $\mathbb{P}(U_e\le p)=p$. Logo $G_p\sim G(n,p)$, e portanto
     \[
-        \Pr(\delta(G(n,p)) \ge d) \to 
-        \begin{cases}
-            0, & \text{se } p \le \dfrac{\log n + (d-1)\log\log n - \omega(n)}{n}, \\[10pt]
-            1, & \text{se } p \ge \dfrac{\log n + (d-1)\log\log n + \omega(n)}{n},
-        \end{cases}
+    f(p)=\mathbb{P}(G_p\in\mathcal{A}).
     \]
-    quando $n \to \infty$.
-\end{problem}
+
+    Se $p\le p'$, então $U_e\le p$ implica $U_e\le p'$, logo $G_p\subseteq G_{p'}$ para toda realização dos $U_e$.
+
+ Como $\mathcal{A}$ é crescente, se $G_p\in\mathcal{A}$ e $G_p\subseteq G_{p'}$, então $G_{p'}\in\mathcal{A}$. Isso dá a inclusão de eventos
+    \[
+    \{G_p\in\mathcal{A}\}\subseteq\{G_{p'}\in\mathcal{A}\}.
+    \]
+
+    Assim, tomando probabilidades,
+    \[
+    f(p)=\mathbb{P}(G_p\in\mathcal{A})\le\mathbb{P}(G_{p'}\in\mathcal{A})=f(p').
+    \]
+    Logo $f$ é não decrescente em $p$. $\blacksquare$
+\end{sol}
+
+
+
 % \begin{sol}
 % \end{sol}
 
