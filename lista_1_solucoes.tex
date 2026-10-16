@@ -239,7 +239,11 @@
     $$2e(B_u) \geq e(G) + t - \sum_{v\in A_u} d(v)$$
 
     Agora vamos somar essa desigualdade para todos os vértices $u\in V(G)$:
-    $$2\sum_{u\in V(G)} e(B_u) \geq n(e(G)+t) - \sum_{u\in V(G)} \sum_{v\in A_u} d(v)$$
+    \begin{equation}
+        \label{ex6_eq1}
+        2\sum_{u\in V(G)} e(B_u) \geq n(e(G)+t) - \sum_{u\in V(G)} \sum_{v\in A_u} d(v)
+    \end{equation}
+
 
     Para calcular o somatório duplo vamos inverter a ordem do somatório.
     Ao invés de fixar $u$ e somar os graus de cada vértice $v$ em sua vizinhança,
@@ -254,10 +258,29 @@
     Utilizando a desigualdade das médias que usamos também no exercício 5, temos que:
     $$d(v)(n-d(v)) \leq \frac{n^2}{4}$$
 
-    Dessa maneira,
-    $$\sum_{v\in V(G)} d(v)(n-d(v)) \leq \sum_{v\in V(G)} \frac{n^2}{4} = n\cdot\frac{n^2}{4}$$
+    Dessa maneira, temos que
+    $$\sum_{u\in V(G)}\sum_{v\in A_u} d(v)=\sum_{v\in V(G)} d(v)(n-d(v)) \leq \sum_{v\in V(G)} \frac{n^2}{4} = n\cdot\frac{n^2}{4}$$
 
+    Logo,
+    $$\sum_{u\in V(G)}\sum_{v\in A_u} d(v) \leq n\cdot\frac{n^2}{4}$$
+
+    Substituindo na desigualdade \ref{ex6_eq1}, onde surge o somatório duplo, temos:
+    $$2 \sum_{u \in V(G)} e(B_u) \ge n(e(G) + t) - n\frac{n^2}{4} = n\left(e(G) + t - \frac{n^2}{4}\right)$$
+
+    Dividindo por 2:
+    $$\sum_{u \in V(G)} e(B_u) \ge \frac{n}{2}\left(e(G) + t - \frac{n^2}{4}\right)$$
+
+    Note que essa é exatamente a soma das arestas internas das vizinhanças de todos os vértices.
+    Estabelecemos lá no início da prova que esse número equivale a $3T(G)$, já que contamos cada
+    triângulo três vezes, uma vez para cada vértice. Entaõ, dividindo por 3, temos:
+    $$T(G) = \sum_{u \in V(G)}e(B_u) \ge \frac{n}{6}\left(e(G) + t - \frac{n^2}{4}\right)$$
     
+    Assim, atingimos exatamente a cota que buscávamos provar:
+    $$T(G) \ge \frac{n}{6}\left(e(G) + t - \frac{n^2}{4}\right)$$
+
+
+
+
 \end{sol}
 
 \begin{problem}{7}
