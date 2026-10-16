@@ -350,8 +350,54 @@
         e(G) \le \left( 1 - \frac{1}{r-1} \right) \frac{n^2}{2}.
     \]
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Para provar o limite máximo de arestas $e(G)$ de um grafo livre de subgrafos completos $K_r$, utiliza-se o Teorema 5 analisando a estrutura do grafo complementar $\overline{G}$.
+    
+    Comece pela propriedade do grafo complementar. Se o grafo $G$ com $n$ vértices é livre de $K_r$, significa que o seu grafo complementar $\overline{G}$ não possui nenhum conjunto independente de tamanho $r$. Consequentemente, o número máximo de vértices mutuamente não adjacentes (o número de independência $\alpha$) em $\overline{G}$ deve ser estritamente menor que $r$. Logo, estabelece-se que:
+    \[
+        \alpha(\overline{G}) \le r - 1.
+    \]
+    
+    Aplique agora o Teorema 5 ao grafo complementar $\overline{G}$. O teorema garante que o número de independência é maior ou igual à soma do inverso dos graus dos vértices acrescidos de 1. Sabendo que o grau de um vértice $v$ no grafo complementar é dado por $\overline{d}(v) = n - 1 - d(v)$, a inequação torna-se:
+    \[
+        \alpha(\overline{G}) \ge \sum_{v \in V(G)} \frac{1}{1 + \overline{d}(v)} \ = \ \sum_{v \in V(G)} \frac{1}{1 + (n - 1 - d(v))} \ = \ \sum_{v \in V(G)} \frac{1}{n - d(v)}.
+    \]
+    
+    Unindo o limite superior de $\alpha(\overline{G})$ com o limite inferior obtido pelo Teorema 5, deduz-se a seguinte relação:
+    \[
+        r - 1 \ge \sum_{v \in V(G)} \frac{1}{n - d(v)}.
+    \]
+    
+    Para relacionar essa soma de frações com o número total de arestas de $G$, aplique a Desigualdade de Cauchy-Schwarz:
+    \[
+        \left( \sum_{v \in V(G)} (n - d(v)) \right) \left( \sum_{v \in V(G)} \frac{1}{n - d(v)} \right) \ge n^2.
+    \]
+    
+    Pela identidade de Euler (Lema do Aperto de Mãos), a soma dos graus de todos os vértices de um grafo é igual ao dobro do número de suas arestas, isto é, $\sum d(v) = 2e(G)$. Portanto, o primeiro termo da desigualdade de Cauchy-Schwarz pode ser reescrito como:
+    \[
+        \sum_{v \in V(G)} (n - d(v)) \ = \ n^2 - \sum_{v \in V(G)} d(v) \ = \ n^2 - 2e(G).
+    \]
+    
+    Substituindo esse valor de volta na desigualdade de Cauchy-Schwarz, isola-se o somatório das frações:
+    \[
+        (n^2 - 2e(G)) \left( \sum_{v \in V(G)} \frac{1}{n - d(v)} \right) \ge n^2 \ \implies \ \sum_{v \in V(G)} \frac{1}{n - d(v)} \ge \frac{n^2}{n^2 - 2e(G)}.
+    \]
+    
+    Por fim, combinando este resultado com a restrição de independência encontrada anteriormente, obtém-se:
+    \[
+        r - 1 \ge \frac{n^2}{n^2 - 2e(G)}.
+    \]
+    
+    Reorganizando algebricamente a desigualdade para isolar $e(G)$:
+    \[
+        (r - 1)(n^2 - 2e(G)) \ge n^2 \ \implies \ n^2 - 2e(G) \ge \frac{n^2}{r - 1} \ \implies \ 2e(G) \le n^2 - \frac{n^2}{r - 1}.
+    \]
+    
+    Ao colocar $n^2$ em evidência e dividir a inequação inteira por 2, a derivação resulta exatamente no limite estabelecido pelo Teorema de Turán, provando a afirmação:
+    \[
+        e(G) \le \left( 1 - \frac{1}{r - 1} \right) \frac{n^2}{2}.
+    \]
+\end{sol}
 
 \begin{problem}{14}
     Seja $\mathcal{A}$ uma família crescente de grafos. Prove que a função
