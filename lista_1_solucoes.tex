@@ -193,8 +193,72 @@
     \]
     triângulos em $G$.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Chamaremos de $T(G)$ o número de triângulos em $G$, em que $G$ é um grafo $t$-longe
+    de ser bipartido. Isto é, qualquer subgrafo bipartido de $G$ tem no máximo $e(G) - t$ arestas.
+    Vamos provar que $T(G) \geq \frac{n}{6} \left( e(G) + t - \frac{n^2}{4} \right)$.
+
+    Nossa prova parte do princípio que uma aresta interna na vizinhança de um vértice $v$
+    significa um triângulo em $G$. Como cada triângulo tem três vértices, isso significa que,
+    ao somar as arestas nas vizinhanças de todos os vértices, obtemos exatamente $3T(G)$.
+
+    Primeiramente, para cada vértice $u\in V(G)$, criaremos uma bipartição do conjnto de vértices:
+    $$B_u = N(u)$$
+    $$A_u = V(G)\setminus N(u)$$
+    É trivial que $|B_u| = d(u)$ e $|A_u| = n - d(u)$.
+
+    As arestas do grafo $G$ podem ser divididas em três conjuntos:
+    as arestas entre $A_u$ e $B_u$, as arestas internas a $A_u$ e as arestas internas a $B_u$.
+    $$e(G) = e(A_u)+e(B_u)+e(A_u,B_u)$$
+
+    Isso pode ser reescrito como:
+    $$e(A_u)+e(B_u) = e(G) - e(A_u,B_u)$$
+
+    Por definição, o subgrafo formado pelas arestas entre $A_u$ e $B_u$ é bipartido.
+    Como $G$ é $t$-longe de ser bipartido, temos que $e(A_u,B_u) \leq e(G) - t$. Isso equivale a
+    $$e(G) - e(A_u,B_u) \geq t$$
+    
+    Combinando isso com a igualdade acima, temos que:
+    $$e(A_u)+e(B_u) = e(G) - e(A_u,B_u) \geq t$$
+
+    Portanto, $e(A_u)+e(B_u) \geq t$, o que implica em:
+    $$e(A_u) \geq t - e(B_u)$$
+    
+    Agora, vamos realizar uma contagem dos graus em $A_u$. Cada aresta interna a $A_u$
+    contribui com dois para a soma dos graus, enquanto cada aresta entre $A_u$ e $B_u$
+    contribui com um. Assim, temos:
+    $$\sum_{v\in A_u} d(v) = 2e(A_u) + e(A_u,B_u)$$
+
+    Substituindo $e(A_u,B_u) = e(G) - e(A_u) - e(B_u)$, temos:
+    $$\sum_{v\in A_u} d(v) = 2e(A_u) + e(G) - e(A_u) - e(B_u) = e(G) + e(A_u) - e(B_u)$$
+
+    Aplicando a desigualdade que encontramos logo acima ($e(A_u) \geq t - e(B_u)$), temos:
+    $$\sum_{v\in A_u} d(v) \geq e(G) + (t-e(B_u)) - e(B_u) = e(G) + t - 2e(B_u)$$
+
+    Isolando $2e(B_u)$, temos:
+    $$2e(B_u) \geq e(G) + t - \sum_{v\in A_u} d(v)$$
+
+    Agora vamos somar essa desigualdade para todos os vértices $u\in V(G)$:
+    $$2\sum_{u\in V(G)} e(B_u) \geq n(e(G)+t) - \sum_{u\in V(G)} \sum_{v\in A_u} d(v)$$
+
+    Para calcular o somatório duplo vamos inverter a ordem do somatório.
+    Ao invés de fixar $u$ e somar os graus de cada vértice $v$ em sua vizinhança,
+    vamos fixar $v$ e somar quantas vezes o grau dele é somado ao total. $d(v)$ é
+    somado uma vez para cada vértice tal que $v\in A_u$. Isto é, para cada vez que $v\notin N(u)$:
+
+    $$\sum_{u\in V(G)} \sum_{v\in A_u} d(v) = \sum_{v\in V(G)} d(v)*|\{\ u\in V(G) : v\notin N(u) \}|$$
+
+    Para cada vértice fixo $v$, o número de vértices que não são seus vizinhos é $n-d(v)$, então:
+    $$\sum_{u\in V(G)} \sum_{v\in A_u} d(v) = \sum_{v\in V(G)} d(v)(n-d(v))$$
+
+    Utilizando a desigualdade das médias que usamos também no exercício 5, temos que:
+    $$d(v)(n-d(v)) \leq \frac{n^2}{4}$$
+
+    Dessa maneira,
+    $$\sum_{v\in V(G)} d(v)(n-d(v)) \leq \sum_{v\in V(G)} \frac{n^2}{4} = n\cdot\frac{n^2}{4}$$
+
+    
+\end{sol}
 
 \begin{problem}{7}
     Prove que o seguinte teorema é verdadeiro. Utilize uma prova diferente da apresentada no livro.
