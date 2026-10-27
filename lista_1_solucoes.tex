@@ -249,9 +249,41 @@
     \]
     triângulos em $G$.
 \end{problem}
-% \begin{sol}
-% \end{sol}
-
+\begin{sol}
+    Para cada vértice $u \in V(G)$, defina os conjuntos $B_u = N_G(u)$ e $A_u = V(G) \setminus B_u$. 
+    Primeiramente, observe que o número de triângulos em $G$, denotado por $k_3(G)$, satisfaz a seguinte equação:
+    $$k_3(G) = \frac{1}{3} \sum_{u \in V(G)} e(B_u)$$.
+    Isso ocorre pois toda aresta dentro de $B_u$ forma um triângulo com o vértice $u$, e cada triângulo é contado uma vez para cada um de seus três vértices.
+    
+    Em seguida, observe que, para cada $u \in V(G)$, temos:
+    $$e(A_u) + e(B_u) \ge t$$.
+    Podemos afirmar isso pois, caso contrário, poderíamos obter um subgrafo bipartido de $G$ removendo menos do que $t$ arestas (as arestas internas de $A_u$ e $B_u$), contradizendo o fato de que $G$ é $t$-longe de ser bipartido.
+    
+    Finalmente, calculando a soma dos graus dos vértices contidos no conjunto $A_u$, obtemos:
+    $$\sum_{v \in A_u} d_G(v) = 2e(A_u) + e(A_u, B_u)$$,
+    em que $e(A_u, B_u)$ denota o número de arestas com uma extremidade em $A_u$ e a outra em $B_u$. Isso é verdadeiro pois cada aresta inteiramente contida em $A_u$ é contada duas vezes no somatório, e cada aresta entre $A_u$ e $B_u$ é contada uma vez.
+    
+    Como o total de arestas do grafo é $e(G) = e(A_u) + e(B_u) + e(A_u, B_u)$, podemos reescrever o somatório substituindo $e(A_u, B_u)$ como:
+    $$\sum_{v \in A_u} d_G(v) = e(G) + e(A_u) - e(B_u)$$.
+    
+    Aplicando a desigualdade demonstrada anteriormente ($e(A_u) \ge t - e(B_u)$), alcançamos um limite inferior para a soma de graus:
+    $$\sum_{v \in A_u} d_G(v) \ge e(G) + t - 2e(B_u)$$.
+    
+    Somando esta desigualdade sobre todos os vértices $u \in V(G)$ e substituindo a relação dos triângulos onde $3k_3(G) = \sum e(B_u)$, temos:
+    $$\sum_{u \in V(G)} \sum_{v \in A_u} d_G(v) \ge n(e(G) + t) - 6k_3(G)$$.
+    
+    Por outro lado, invertendo a ordem da análise no somatório duplo para a perspectiva do vértice $v$, podemos reescrevê-lo da seguinte forma:
+    $$\sum_{u \in V(G)} \sum_{v \in A_u} d_G(v) = \sum_{v \in V(G)} d_G(v)(n - d_G(v))$$.
+    
+    A desigualdade resultante para este somatório decorre da função $x(n - x)$ ser maximizada em $x = n/2$. Dessa forma, o limite superior do somatório no grafo atinge:
+    $$\sum_{v \in V(G)} d_G(v)(n - d_G(v)) \le n \left( \frac{n^2}{4} \right) = \frac{n^3}{4}$$.
+    
+    Conectando as conclusões do limite superior e do limite inferior em uma mesma inequação, obtemos:
+    $$\frac{n^3}{4} \ge n(e(G) + t) - 6k_3(G)$$.
+    
+    Por fim, isolando a variável $k_3(G)$, o resultado segue de imediato provando a afirmação matemática do Teorema:
+    $$k_3(G) \ge \frac{n}{6} \left( e(G) + t - \frac{n^2}{4} \right)$$.
+\end{sol}
 \begin{problem}{7}
     Prove que o seguinte teorema é verdadeiro. Utilize uma prova diferente da apresentada no livro.
     
@@ -406,8 +438,38 @@
     \]
     é crescente em $p$.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+     Sejam $p_1$ e $p_2$ duas probabilidades quaisquer tais que $0 \le p_1 < p_2 \le 1$. Para demonstrar que a função $f(p)$ é crescente, deve-se provar que $f(p_1) \le f(p_2)$.
+     
+     Primeiro, considere um grafo aleatório $G_1 \sim G(n, p_1)$[cite: 3]. Em seguida, gere independentemente um grafo $G_2 \sim G(n, q)$, onde a probabilidade $q$ é estipulada como:
+     \[
+         q = \frac{p_2 - p_1}{1 - p_1}
+     \]
+     
+     A partir deles, construa um novo grafo $G_3 = G_1 \cup G_2$, cujas arestas estão presentes caso tenham sido selecionadas em $G_1$, em $G_2$, ou em ambos.
+     
+     A probabilidade de uma aresta específica $e$ não ser incluída no grafo $G_3$ equivale à probabilidade de a mesma falhar em ser inserida em $G_1$ e falhar em ser inserida em $G_2$. Como as escolhas são independentes, tem-se:
+     \[
+         \Pr(e \notin G_3) = (1 - p_1)(1 - q)
+     \]
+     
+     Substituindo o valor de $q$ na expressão, obtém-se:
+     \[
+         \Pr(e \notin G_3) = (1 - p_1)\left(1 - \frac{p_2 - p_1}{1 - p_1}\right) \ = \ 1 - p_1 - (p_2 - p_1) \ = \ 1 - p_2
+     \]
+     
+     Consequentemente, a probabilidade de a aresta pertencer a $G_3$ é exatamente $p_2$. Uma vez que as decisões de arestas em $G_1$ e $G_2$ ocorrem de maneira completamente independente para cada par de vértices, a distribuição probabilística do grafo composto $G_3$ corresponde com exatidão à do modelo $G(n, p_2)$.
+     
+     A operação de união determina naturalmente que o grafo $G_1$ seja um subgrafo de $G_3$, de forma que $G_1 \subseteq G_3$[cite: 3]. Sendo $\mathcal{A}$ uma família crescente de grafos, ela satisfaz a propriedade de que $G \in \mathcal{A}$ e $G \subseteq H$ implicam $H \in \mathcal{A}$. A constatação de que o subgrafo $G_1$ possui a propriedade $\mathcal{A}$ garante, portanto, compulsoriamente que o supergrafo $G_3$ também a possua ($G_3 \in \mathcal{A}$).
+     
+     Isso evidencia que o evento $\{G_1 \in \mathcal{A}\}$ está contido integralmente no evento $\{G_3 \in \mathcal{A}\}$. Em termos de probabilidade, a chance de ocorrência do subevento é sempre restrita e delimitada pela chance de ocorrência do superevento:
+     \[
+         \Pr(G_1 \in \mathcal{A}) \le \Pr(G_3 \in \mathcal{A})
+     \]
+     
+     Sendo $G_1$ e $G_3$ cópias distribuídas conforme $G(n, p_1)$ e $G(n, p_2)$ respectivamente, fica matematicamente estabelecido que $f(p_1) \le f(p_2)$. Isso conclui a prova formal de que $f(p)$ atua como uma função crescente.
+\end{sol}
+
 
 \begin{problem}{15}
     Mostre que, para cada $d \in \mathbb{N}$ e qualquer função $\omega(n) \gg 1$ vale que
