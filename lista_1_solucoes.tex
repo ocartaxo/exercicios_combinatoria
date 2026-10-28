@@ -360,29 +360,29 @@
     Logo, o número esperado total de vértices com grau menor que $d$ é assintoticamente dominado pelo termo $X_{d-1}$:
     \[\mathbb{E}[X] \sim \mathbb{E}[X_{d-1}] \sim \frac{1}{(d-1)!} e^{\mp \omega(n)}.\]
 
-    Vamos demonstrar a primeira parte do teorema utilizando o Método do Primeiro Momento[cite: 2]. 
+    Vamos demonstrar a primeira parte do teorema utilizando o Método do Primeiro Momento.
     Suponha que $p \ge \frac{\log n + (d-1)\log\log n + \omega(n)}{n}$. O sinal associado a $\omega(n)$ no expoente é negativo. 
     Como $\omega(n) \gg 1$, o termo $e^{-\omega(n)} \to 0$. Consequentemente:
     \[\mathbb{E}[X] \sim \frac{1}{(d-1)!} e^{-\omega(n)} \to 0.\]
 
-    Pela Desigualdade de Markov, a probabilidade do grafo possuir pelo menos um vértice de grau menor que $d$ é limitada por[cite: 2]:
+    Pela Desigualdade de Markov, a probabilidade do grafo possuir pelo menos um vértice de grau menor que $d$ é limitada por:
     \[\Pr(X \ge 1) \le \mathbb{E}[X] \to 0.\]
 
     Logo, subtraindo do evento complementar, temos:
     \[\Pr(X = 0) = 1 - \Pr(X \ge 1) \to 1.\]
     Isso prova que $\Pr(\delta(G(n,p)) \ge d) \to 1$.
 
-    Agora, vamos demonstrar a segunda parte utilizando o Método do Segundo Momento[cite: 2]. 
+    Agora, vamos demonstrar a segunda parte utilizando o Método do Segundo Momento. 
     Suponha que $p \le \frac{\log n + (d-1)\log\log n - \omega(n)}{n}$. O sinal associado a $\omega(n)$ torna-se positivo, logo:
     \[\mathbb{E}[X] \sim \frac{1}{(d-1)!} e^{\omega(n)} \to \infty.\]
 
-    Pela Desigualdade de Chebyshev, podemos limitar a probabilidade de $\{X = 0\}$ utilizando a variância[cite: 2]:
+    Pela Desigualdade de Chebyshev, podemos limitar a probabilidade de $\{X = 0\}$ utilizando a variância:
     \[\Pr(X = 0) \le \frac{\text{Var}(X)}{(\mathbb{E}[X])^2} = \frac{\mathbb{E}[X^2]}{(\mathbb{E}[X])^2} - 1.\]
 
     Para calcular $\mathbb{E}[X^2]$, abrimos a soma considerando os indicadores para cada vértice:
     \[\mathbb{E}[X^2] = \mathbb{E}[X] + \sum_{u \neq v} \Pr(d_G(u) < d \text{ e } d_G(v) < d).\]
 
-    Como a dependência entre os graus de dois vértices distintos se limita à presença de apenas uma possível aresta $\{u,v\}$, os eventos são assintoticamente independentes[cite: 3]. 
+    Como a dependência entre os graus de dois vértices distintos se limita à presença de apenas uma possível aresta $\{u,v\}$, os eventos são assintoticamente independentes. 
     Assim, a soma da probabilidade conjunta converge para:
     \[\sum_{u \neq v} \Pr(d_G(u) < d \text{ e } d_G(v) < d) \sim n^2 (\Pr(d_G(u) < d))^2 \sim (\mathbb{E}[X])^2.\]
 
