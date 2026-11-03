@@ -14,14 +14,14 @@
 \newenvironment{problem}[2][Exercício]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
 \newenvironment{sol}
-    {\emph{}
+    {\textbf{Demonstração:}\emph{}
     }
     {
     \qed
     }
 \specialcomment{com}{ \color{blue} \textbf{Comment:} }{\color{black}} %for instructor comments while grading
 \NewEnviron{probscore}{\marginpar{ \color{blue} \tiny Problem Score: \BODY \color{black} }}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Fill in the appropriate information below
@@ -81,8 +81,64 @@
         \mathrm{ex}(n, K_{s,t}) \le C(s,t) n^{2 - 1/s}.
     \]
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Seja $G$ um grafo com $n$ vértices e livre do subgrafo $K_{s,t}$.
+    Vamos contar o número de ``$s$-cerejas'' em $G$, que correspondem a cópias do grafo estrela $K_{1,s}$.
+    Para um vértice específico $v \in V(G)$, o número de cópias de $K_{1,s}$ centradas em $v$ é dado exatamente pela combinação $\binom{d_G(v)}{s}$.
+    Assim, o número total de $s$-cerejas presentes em todo o grafo $G$ é expresso pela soma:   
+    \[ 
+        \sum_{v \in V(G)} \binom{d_G(v)}{s}. 
+    \]
+
+    Podemos encontrar um limite superior para essa soma focando na outra extremidade dessas estrelas.
+    Como o grafo é livre de $K_{s,t}$, qualquer subconjunto de $s$ vértices pode ser vizinho em comum de, no máximo, $t-1$ vértices.
+    Dessa forma, o número total dessas $s$-cerejas é limitado superiormente por $(t-1)\binom{n}{s}$.
+    Portanto, temos a desigualdade:   
+    \[ 
+        \sum_{v \in V(G)} \binom{d_G(v)}{s} \le (t-1)\binom{n}{s}. 
+    \]
+
+    Agora, vamos encontrar um limite inferior para a soma dos graus utilizando a propriedade de convexidade.
+    Sabe-se que a função $\binom{x}{s}$ é estritamente convexa para valores de $x > s - 1$.
+    Devido a essa propriedade de convexidade, a soma total atinge o seu valor mínimo quando todos os vértices do grafo possuem graus iguais ao grau médio.
+    Sendo o grau médio $\frac{2|E(G)|}{n}$, a aplicação da convexidade formula a seguinte desigualdade:   
+    \[ 
+        n \binom{\frac{2|E(G)|}{n}}{s} \le \sum_{v \in V(G)} \binom{d_G(v)}{s}. 
+    \]
+
+    Combinando os limites inferior e superior estabelecidos para o número de $s$-cerejas, obtemos:
+    \[ 
+        n \binom{\frac{2|E(G)|}{n}}{s} \le (t-1)\binom{n}{s}. 
+    \]
+
+    Para simplificar essa expressão e extrair o limite do número de arestas, ao expressar os coeficientes binomiais como quocientes de fatoriais, a inequação pode ser simplificada para analisar seu termo dominante.
+    Aproximando $\binom{x}{s} \ge \frac{(x - (s-1))^s}{s!}$ e $\binom{n}{s} \le \frac{n^s}{s!}$, temos que:   
+    \[ 
+        n \left(\frac{2|E(G)|}{n} - (s-1)\right)^s \le (t-1)n^s. 
+    \]
+
+    Resolvendo a inequação para isolar o número de arestas:
+    Dividindo ambos os lados por $n$, obtemos:
+    \[ 
+        \left(\frac{2|E(G)|}{n} - (s-1)\right)^s \le (t-1)n^{s-1}. 
+    \]
+
+    Aplicando a raiz $s$-ésima em ambos os lados, resulta em:
+    \[ 
+        \frac{2|E(G)|}{n} - (s-1) \le (t-1)^{1/s} n^{1 - 1/s}. 
+    \]
+
+    Multiplicando por $n$ e dividindo por $2$, isolamos $|E(G)|$:
+    \[ 
+        |E(G)| \le \frac{1}{2} (t-1)^{1/s} n^{2 - 1/s} + \frac{s-1}{2} n. 
+    \]
+
+    Essa resolução comprova a limitação superior de arestas na ordem de $\mathcal{O}(n^{2 - 1/s})$.
+    Como $\mathrm{ex}(n, K_{s,t})$ é definido como o número máximo de arestas que um grafo com $n$ vértices pode ter sem conter um subgrafo $K_{s,t}$, podemos englobar as constantes na função $C(s,t)$ e concluir a generalização que:   
+    \[ 
+        \mathrm{ex}(n, K_{s,t}) \le C(s,t) n^{2 - 1/s}. 
+    \]
+\end{sol}
 
 \begin{problem}{4}
     Prove que o seguinte lema é verdadeiro.
@@ -93,8 +149,33 @@
     \]
     Equivalentemente, existe um caminho de comprimento pelo menos $2\delta(G)$, a menos que o grafo seja um caminho Hamiltoniano.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Vamos provar o lema por contradição. Tome um caminho máximo $P=\{v_0, v_1, \ldots, v_k\}$ em $G=(V,E)$ tal que $P$ possui $k$ arestas e $k+1$ vértices.
+    Suponha que $k < 2\delta(G)$ e $k < n-1$ em que $|V|=n$. Como $P$ é máximo, temos que todos os vizinhos de $v_0$ (conjunto $N(v_0)$) e $v_k$ (conjunto $N(v_k)$) estão em $P$.
+
+    Agora, tome $S=\{v_{i-1}|v_i\in N(v_0)\}$. Por definição, $|S|=|N(v_0)|\geq \delta(G)$.
+    Também é verdade que $|N(v_k)|\geq \delta(G)$. Assim, $|S|+|N(v_k)|\geq 2\delta(G)$.
+    
+    No entanto, tanto $S$ quanto $N(v_k)$ são subconjuntos de $P\setminus{v_k}$.
+    Podemos afirmar isso pois $v_k$ não pode ser vizinho dele próprio e $S$ não pode conter $v_k$ pela definição de $S$,
+    que exigiria que existisse um $v_{k+1}\in N(v_0)$ que não faz parte de $P$ (o que contradiria a maximalidade de $P$).
+    Isso significa que $|S\cup N(v_k)|\leq|P|-1 = k < 2\delta(G)$.
+    Como estabelecemos que $|S|+|N(v_k)|\geq 2\delta(G)$, temos, pelo princípio da casa dos pombos,
+    que $S\cap N(v_k)\neq \emptyset$.
+
+    Assim, sabemos que existe um $v_{i-1}\in S\cup N(v_k)$ tal que $v_{i-1}\in N(v_k)$ e $v_i \in N(v_0)$ (pela construção de $S$).
+
+    Isso significa que podemos construir um ciclo com todos os vértices de $P$ da seguinte forma:
+    $$C=\{v_0,v_1,\ldots,v_{i-1},v_k,v_{k-1},v_{k-2},\ldots,v_i,v_0\}$$
+
+    Nós sabemos que existe um vértice $v\in V\setminus P$ porque $k<n-1$.
+    Como $G$ é conexo, existe um caminho de $v$ para algum vértice em $C$.
+    Seja $v_j$ o vértice no caminho de $v$ para $C$ que é vizinho de algum vértice em $C$.
+
+    Podemos construir um caminho maior que $P$ ligando $v_j$ ao vértice de $C$ que é vizinho de $v_j$ e, em seguida,
+    percorrendo todo o resto do ciclo. Assim, encontramos um caminho maior que $P$, o que contradiz a maximalidade de $P$.
+    Portanto, nossa suposição de que $k < 2\delta(G)$ e $k < n-1$ deve ser falsa, e o lema é verdadeiro.    
+\end{sol}
 
 \begin{problem}{5}
     Prove que o seguinte teorema é verdadeiro.
@@ -105,8 +186,59 @@
     \]
     então $G$ contém um subgrafo bipartido com pelo menos $e(G) - t$ arestas.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Seja $v_\Delta$ um vértice de grau máximo em $G$.
+    O subgrafo $A$ induzido por $N(v_\Delta)$ é evidentemente um conjunto independente.
+    Nós podemos afirmar isso pois, se houvesse uma aresta $uv\in E(A)$, teríamos um triângulo
+    formado por $u,v$ e $v_\Delta$, o que contradiz a hipótese de que $G$ é livre de triângulos.
+    Por construção, $|V(A)|=\Delta$ (em que $\Delta=\Delta(G)$) e $|E(A)|=0$.
+
+    Seja $B$ o subgrafo induzido por $V(G)\setminus N(v_\Delta)$,
+    temos que $V(B)$ é o complemento de $V(A)$, ou seja, $V(B)=V(G)\setminus N(v_\Delta)$.
+    Assim, $|V(B)|=n-\Delta$.
+
+    Nós temos que $V(A)$ e $V(B)$ formam uma partição de $V(G)$,
+    e que $V(A)$ é independente.
+    Assim, as arestas que impedem que $G$ seja bipartido são apenas as arestas entre vértices de $B$.
+    Vamos mostrar que existem, no máximo, $t$ dessas arestas.
+    Ao fazer isso, poderemos removê-las do grafo $G$ e obter um subgrafo bipartido com pelo menos $e(G)-t$ arestas.
+    
+    Seja $e(A,B)$ as arestas que ligam vértices de $A$ a vértices de $B$ no grafo $G$,
+    temos que $e(G)=e(A,B)+e(B)$, pois $e(A)=0$. Assim, $|e(G)|=|e(A,B)|+|e(B)|$.
+
+    Agora, vamos calcular a soma dos graus dos vértices de $B$. Nessa contagem, contamos as
+    arestas em $e(B)$ duas vezes (uma vez para cada extremidade) e as arestas em $e(A,B)$
+    uma vez (pois apenas uma extremidade está em $B$). Assim:
+    $$k=\sum_{v \in V(B)} d(v) = |e(B)| + |e(B)| + |e(A,B)|$$
+
+    Como $|e(G)|=|e(A,B)|+|e(B)|$, podemos substituir $|e(B)|+e(A,B)|$ na equação acima e obter:
+    $$k = |e(B)| + |e(G)|$$.
+
+    Podemos encontrar um limite superior para $k$ da seguinte forma:
+
+    Sabemos que $d(v)\leq \Delta$ para todo $v\in V(G)$, então:
+    $$k=\sum_{v \in V(B)} d(v) \leq |V(B)|\Delta = (n-\Delta)\Delta$$.
+
+    Pela desigualdade das médias aritmética e geométrica, temos que:
+    $(n-\Delta)\Delta \leq \frac{n^2}{4}$.
+
+    Assim, temos que:
+    $$k \leq (n-\Delta)\Delta \leq \frac{n^2}{4}$$.
+
+    Como $k=|e(B)| + |e(G)|$, temos que:
+    $$|e(B)| + |e(G)| \leq \frac{n^2}{4}$$.
+
+    Pela hipótese do teorema, temos que $|e(G)| \geq \frac{n^2}{4}-t$,
+    que equivale a $t \geq \frac{n^2}{4} - |e(G)|$.
+
+    Substituindo na desigualdade acima, temos que:
+    $t \geq |e(G)| - |e(G)| + |e(B)| = |e(B)|$. 
+
+    Dessa forma, existem no máximo $t$ arestas em $B$,
+    e podemos removê-las do grafo $G$ para obter um subgrafo bipartido com pelo menos
+    $e(G)-t$ arestas.
+
+\end{sol}
 
 \begin{problem}{6}
     Prove que o seguinte teorema é verdadeiro.
@@ -117,8 +249,95 @@
     \]
     triângulos em $G$.
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+    Chamaremos de $T(G)$ o número de triângulos em $G$, em que $G$ é um grafo $t$-longe
+    de ser bipartido. Isto é, qualquer subgrafo bipartido de $G$ tem no máximo $e(G) - t$ arestas.
+    Vamos provar que $T(G) \geq \frac{n}{6} \left( e(G) + t - \frac{n^2}{4} \right)$.
+
+    Nossa prova parte do princípio que uma aresta interna na vizinhança de um vértice $v$
+    significa um triângulo em $G$. Como cada triângulo tem três vértices, isso significa que,
+    ao somar as arestas nas vizinhanças de todos os vértices, obtemos exatamente $3T(G)$.
+
+    Primeiramente, para cada vértice $u\in V(G)$, criaremos uma bipartição do conjnto de vértices:
+    $$B_u = N(u)$$
+    $$A_u = V(G)\setminus N(u)$$
+    É trivial que $|B_u| = d(u)$ e $|A_u| = n - d(u)$.
+
+    As arestas do grafo $G$ podem ser divididas em três conjuntos:
+    as arestas entre $A_u$ e $B_u$, as arestas internas a $A_u$ e as arestas internas a $B_u$.
+    $$e(G) = e(A_u)+e(B_u)+e(A_u,B_u)$$
+
+    Isso pode ser reescrito como:
+    $$e(A_u)+e(B_u) = e(G) - e(A_u,B_u)$$
+
+    Por definição, o subgrafo formado pelas arestas entre $A_u$ e $B_u$ é bipartido.
+    Como $G$ é $t$-longe de ser bipartido, temos que $e(A_u,B_u) \leq e(G) - t$. Isso equivale a
+    $$e(G) - e(A_u,B_u) \geq t$$
+    
+    Combinando isso com a igualdade acima, temos que:
+    $$e(A_u)+e(B_u) = e(G) - e(A_u,B_u) \geq t$$
+
+    Portanto, $e(A_u)+e(B_u) \geq t$, o que implica em:
+    $$e(A_u) \geq t - e(B_u)$$
+    
+    Agora, vamos realizar uma contagem dos graus em $A_u$. Cada aresta interna a $A_u$
+    contribui com dois para a soma dos graus, enquanto cada aresta entre $A_u$ e $B_u$
+    contribui com um. Assim, temos:
+    $$\sum_{v\in A_u} d(v) = 2e(A_u) + e(A_u,B_u)$$
+
+    Substituindo $e(A_u,B_u) = e(G) - e(A_u) - e(B_u)$, temos:
+    $$\sum_{v\in A_u} d(v) = 2e(A_u) + e(G) - e(A_u) - e(B_u) = e(G) + e(A_u) - e(B_u)$$
+
+    Aplicando a desigualdade que encontramos logo acima ($e(A_u) \geq t - e(B_u)$), temos:
+    $$\sum_{v\in A_u} d(v) \geq e(G) + (t-e(B_u)) - e(B_u) = e(G) + t - 2e(B_u)$$
+
+    Isolando $2e(B_u)$, temos:
+    $$2e(B_u) \geq e(G) + t - \sum_{v\in A_u} d(v)$$
+
+    Agora vamos somar essa desigualdade para todos os vértices $u\in V(G)$:
+    \begin{equation}
+        \label{ex6_eq1}
+        2\sum_{u\in V(G)} e(B_u) \geq n(e(G)+t) - \sum_{u\in V(G)} \sum_{v\in A_u} d(v)
+    \end{equation}
+
+
+    Para calcular o somatório duplo vamos inverter a ordem do somatório.
+    Ao invés de fixar $u$ e somar os graus de cada vértice $v$ em sua vizinhança,
+    vamos fixar $v$ e somar quantas vezes o grau dele é somado ao total. $d(v)$ é
+    somado uma vez para cada vértice tal que $v\in A_u$. Isto é, para cada vez que $v\notin N(u)$:
+
+    $$\sum_{u\in V(G)} \sum_{v\in A_u} d(v) = \sum_{v\in V(G)} d(v)*|\{\ u\in V(G) : v\notin N(u) \}|$$
+
+    Para cada vértice fixo $v$, o número de vértices que não são seus vizinhos é $n-d(v)$, então:
+    $$\sum_{u\in V(G)} \sum_{v\in A_u} d(v) = \sum_{v\in V(G)} d(v)(n-d(v))$$
+
+    Utilizando a desigualdade das médias que usamos também no exercício 5, temos que:
+    $$d(v)(n-d(v)) \leq \frac{n^2}{4}$$
+
+    Dessa maneira, temos que
+    $$\sum_{u\in V(G)}\sum_{v\in A_u} d(v)=\sum_{v\in V(G)} d(v)(n-d(v)) \leq \sum_{v\in V(G)} \frac{n^2}{4} = n\cdot\frac{n^2}{4}$$
+
+    Logo,
+    $$\sum_{u\in V(G)}\sum_{v\in A_u} d(v) \leq n\cdot\frac{n^2}{4}$$
+
+    Substituindo na desigualdade \ref{ex6_eq1}, onde surge o somatório duplo, temos:
+    $$2 \sum_{u \in V(G)} e(B_u) \ge n(e(G) + t) - n\frac{n^2}{4} = n\left(e(G) + t - \frac{n^2}{4}\right)$$
+
+    Dividindo por 2:
+    $$\sum_{u \in V(G)} e(B_u) \ge \frac{n}{2}\left(e(G) + t - \frac{n^2}{4}\right)$$
+
+    Note que essa é exatamente a soma das arestas internas das vizinhanças de todos os vértices.
+    Estabelecemos lá no início da prova que esse número equivale a $3T(G)$, já que contamos cada
+    triângulo três vezes, uma vez para cada vértice. Entaõ, dividindo por 3, temos:
+    $$T(G) = \sum_{u \in V(G)}e(B_u) \ge \frac{n}{6}\left(e(G) + t - \frac{n^2}{4}\right)$$
+    
+    Assim, atingimos exatamente a cota que buscávamos provar:
+    $$T(G) \ge \frac{n}{6}\left(e(G) + t - \frac{n^2}{4}\right)$$
+
+
+
+
+\end{sol}
 
 \begin{problem}{7}
     Prove que o seguinte teorema é verdadeiro. Utilize uma prova diferente da apresentada no livro.
@@ -128,8 +347,40 @@
         r(P_k) = \left\lceil \frac{3k}{2} \right\rceil
     \]
 \end{problem}
-% \begin{sol}
-% \end{sol}
+\begin{sol}
+     Para provar que $r(P_k) = \left\lceil \frac{3k}{2} \right\rceil$, deve-se estabelecer o limite inferior e o limite superior separadamente. Lembre-se de que $P_k$ denota um caminho de comprimento $k$, possuindo portanto $k+1$ vértices.
+
+    Comece pelo limite inferior, $r(P_k) \ge \left\lceil \frac{3k}{2} \right\rceil$. Construa uma $2$-coloração (vermelho e azul) das arestas de um grafo completo $K_N$, onde $N = \left\lceil \frac{3k}{2} \right\rceil - 1$, que não contenha nenhum $P_k$ monocromático.
+    
+    Divida os $N$ vértices em dois conjuntos disjuntos, $A$ e $B$, tais que $|A| = k$ e $|B| = \left\lfloor \frac{k-1}{2} \right\rfloor$. Verifique que a soma das cardinalidades exaure $N$, pois $k + \left\lfloor \frac{k-1}{2} \right\rfloor = \left\lceil \frac{3k}{2} \right\rceil - 1 = N$. Colora todas as arestas internas de $A$ e internas de $B$ de vermelho, e todas as arestas entre $A$ e $B$ de azul.
+    
+    Analise os caminhos resultantes dessa construção. Qualquer caminho vermelho estará inteiramente contido em $A$ ou em $B$. Como o maior desses conjuntos é $A$, o número máximo de vértices em um caminho vermelho é $k$. Por outro lado, as arestas azuis formam um grafo bipartido completo entre $A$ e $B$. Um caminho azul deve, portanto, alternar estritamente entre os vértices de ambos os conjuntos. Sendo $|B|$ a menor partição, o caminho pode visitar no máximo todos os $|B|$ vértices de $B$ e, consequentemente, no máximo $|B| + 1$ vértices de $A$. O total de vértices desse caminho azul é no máximo $2|B| + 1 = 2\left\lfloor \frac{k-1}{2} \right\rfloor + 1 \le k$. Como nenhum caminho monocromático alcança $k+1$ vértices, fica provado o limite inferior.
+
+    Passe agora ao limite superior, $r(P_k) \le \left\lceil \frac{3k}{2} \right\rceil$. Tome $N = \left\lceil \frac{3k}{2} \right\rceil$ e suponha, por absurdo, que exista uma $2$-coloração de $K_N$ sem nenhum caminho monocromático de $k+1$ vértices.
+    
+    Pelo Lema de Cobertura de Caminhos (também conhecido como Lema de Gerencsér-Gyárfás), os vértices de qualquer grafo completo com arestas bicolores podem ser particionados em exatamente dois caminhos disjuntos de cores distintas. Seja então $V(K_N)$ coberto por um caminho vermelho $R = (v_1, \dots, v_r)$ e um caminho azul $B = (u_1, \dots, u_b)$, de tal forma que $r + b = N$. Dentre todas as partições válidas, escolha aquela que maximiza o tamanho $r$ do caminho vermelho.
+    
+    Como assumiu-se que não há caminhos monocromáticos de tamanho $k+1$, tem-se obrigatoriamente $r \le k$ e $b \le k$. Disso deduz-se o limite inferior para o tamanho de $B$:
+    \[
+        b = N - r \ \ge \ \left\lceil \frac{3k}{2} \right\rceil - k \ = \ \left\lceil \frac{k}{2} \right\rceil.
+    \]
+    
+    Pela escolha da partição que maximiza $R$, a aresta $v_r u_1$ não pode ser vermelha. Se o fosse, poder-se-ia estender $R$ para $v_1 \dots v_r u_1$ (passando a ter tamanho $r+1$) e reduzir $B$ para $u_2 \dots u_b$, violando a maximalidade de $r$. Assim, $v_r u_1$ deve ser necessariamente azul.
+    
+    Aplicando o mesmo raciocínio ao interior de $R$, não é possível inserir o vértice $u_1$ entre $v_i$ e $v_{i+1}$ usando apenas arestas vermelhas, pois isso também aumentaria o tamanho de $R$. Isso significa que, para cada par de vértices adjacentes em $R$, pelo menos uma das arestas que os liga a $u_1$ é azul. Logo, o vértice $u_1$ do caminho azul incide em pelo menos $\left\lceil \frac{r}{2} \right\rceil$ arestas azuis conectadas ao caminho vermelho $R$. O mesmo argumento vale para o vértice final $u_b$, que também deve ter pelo menos $\left\lceil \frac{r}{2} \right\rceil$ arestas azuis ligadas a $R$.
+    
+    Sendo as arestas de conexão maciçamente azuis nas pontas de $B$, cria-se um ciclo estrutural onde é possível mesclar os vértices de $B$ percorrendo atalhos azuis por dentro de $R$. O caminho azul resultante consegue visitar todos os $b$ vértices de $B$ e saltar por pelo menos $\left\lfloor \frac{r}{2} \right\rfloor + 1$ vértices de $R$. O total de vértices desse novo caminho azul formado será:
+    \[
+        b + \left\lfloor \frac{r}{2} \right\rfloor + 1 \ = \ N - r + \left\lfloor \frac{r}{2} \right\rfloor + 1 \ = \ N - \left\lceil \frac{r}{2} \right\rceil + 1.
+    \]
+    
+    Substituindo $N = k + \left\lceil \frac{k}{2} \right\rceil$, e sabendo que a restrição $r \le k$ implica $\left\lceil \frac{r}{2} \right\rceil \le \left\lceil \frac{k}{2} \right\rceil$, obtém-se o número mínimo de vértices:
+    \[
+        \left(k + \left\lceil \frac{k}{2} \right\rceil\right) - \left\lceil \frac{k}{2} \right\rceil + 1 \ = \ k + 1.
+    \]
+    
+    O grafo formará, inevitavelmente, um caminho azul de tamanho pelo menos $k+1$, o que entra em contradição direta com a premissa inicial de que nenhum caminho monocromático atingia esse comprimento. As duas extremidades provam, com exatidão, que $r(P_k) = \left\lceil \frac{3k}{2} \right\rceil$.
+\end{sol}
 
 \begin{problem}{8}
     Decida se a seguinte afirmação é verdadeira ou falsa. Se for verdadeira, prove-a; se for falsa, apresente um contraexemplo: quaisquer eventos são mutuamente independentes se, e somente se, são dois a dois independentes.
@@ -313,7 +564,7 @@
 \begin{problem}{14}
     Seja $\mathcal{A}$ uma família crescente de grafos. Prove que a função
     \[
-    f(p) = \mathbb{P}\big(G(n,p)\in\mathcal{A}\big)
+        f(p) = \Pr(G(n,p) \in \mathcal{A})
     \]
     é crescente em $p$.
 \end{problem}
@@ -345,10 +596,69 @@ G_p := \{\, e\in E(K_n) : U_e\le p \,\}.
     Logo $f$ é não decrescente em $p$. $\blacksquare$
 \end{sol}
 
+\begin{problem}{15}
+    Mostre que, para cada $d \in \mathbb{N}$ e qualquer função $\omega(n) \gg 1$ vale que
+    \[
+        \Pr(\delta(G(n,p)) \ge d) \to 
+        \begin{cases}
+            0, & \text{se } p \le \dfrac{\log n + (d-1)\log\log n - \omega(n)}{n}, \\[10pt]
+            1, & \text{se } p \ge \dfrac{\log n + (d-1)\log\log n + \omega(n)}{n},
+        \end{cases}
+    \]
+    quando $n \to \infty$.
+\end{problem}
+\begin{sol}
+    A probabilidade de um vértice específico ter grau $k$ segue uma distribuição binomial. Portanto, o valor esperado de $X_k$ é dado por:
+    \[\mathbb{E}[X_k] = n \binom{n-1}{k} p^k (1-p)^{n-1-k}.\]
 
+    Como $p = o(1)$ e $k$ é uma constante em relação a $n$, podemos aplicar aproximações assintóticas quando $n \to \infty$. 
+    Utilizando $\binom{n-1}{k} \sim \frac{n^k}{k!}$ e o limite $(1-p)^{n-1-k} \sim e^{-np}$, substituímos a forma geral de $p$ dada no teorema:
+    \[p = \frac{\log n + (d-1)\log\log n \pm \omega(n)}{n}.\]
 
-% \begin{sol}
-% \end{sol}
+    O que nos dá a aproximação para a exponencial:
+    \[e^{-np} \sim \exp\left(-\log n - (d-1)\log\log n \mp \omega(n)\right) = \frac{e^{\mp \omega(n)}}{n (\log n)^{d-1}}.\]
+
+    Multiplicando os fatores de $\mathbb{E}[X_k]$, obtemos:
+    \[\mathbb{E}[X_k] \sim n \left(\frac{n^k}{k!}\right) \left(\frac{\log n}{n}\right)^k \frac{e^{\mp \omega(n)}}{n (\log n)^{d-1}} = \frac{(\log n)^{k - d + 1}}{k!} e^{\mp \omega(n)}.\]
+
+    Para qualquer $k < d - 1$, o expoente do logaritmo é negativo, fazendo com que $\mathbb{E}[X_k]$ tenda a zero muito mais rapidamente que o termo onde $k = d-1$. 
+    Logo, o número esperado total de vértices com grau menor que $d$ é assintoticamente dominado pelo termo $X_{d-1}$:
+    \[\mathbb{E}[X] \sim \mathbb{E}[X_{d-1}] \sim \frac{1}{(d-1)!} e^{\mp \omega(n)}.\]
+
+    Vamos demonstrar a primeira parte do teorema utilizando o Método do Primeiro Momento[cite: 2]. 
+    Suponha que $p \ge \frac{\log n + (d-1)\log\log n + \omega(n)}{n}$. O sinal associado a $\omega(n)$ no expoente é negativo. 
+    Como $\omega(n) \gg 1$, o termo $e^{-\omega(n)} \to 0$. Consequentemente:
+    \[\mathbb{E}[X] \sim \frac{1}{(d-1)!} e^{-\omega(n)} \to 0.\]
+
+    Pela Desigualdade de Markov, a probabilidade do grafo possuir pelo menos um vértice de grau menor que $d$ é limitada por[cite: 2]:
+    \[\Pr(X \ge 1) \le \mathbb{E}[X] \to 0.\]
+
+    Logo, subtraindo do evento complementar, temos:
+    \[\Pr(X = 0) = 1 - \Pr(X \ge 1) \to 1.\]
+    Isso prova que $\Pr(\delta(G(n,p)) \ge d) \to 1$.
+
+    Agora, vamos demonstrar a segunda parte utilizando o Método do Segundo Momento[cite: 2]. 
+    Suponha que $p \le \frac{\log n + (d-1)\log\log n - \omega(n)}{n}$. O sinal associado a $\omega(n)$ torna-se positivo, logo:
+    \[\mathbb{E}[X] \sim \frac{1}{(d-1)!} e^{\omega(n)} \to \infty.\]
+
+    Pela Desigualdade de Chebyshev, podemos limitar a probabilidade de $\{X = 0\}$ utilizando a variância[cite: 2]:
+    \[\Pr(X = 0) \le \frac{\text{Var}(X)}{(\mathbb{E}[X])^2} = \frac{\mathbb{E}[X^2]}{(\mathbb{E}[X])^2} - 1.\]
+
+    Para calcular $\mathbb{E}[X^2]$, abrimos a soma considerando os indicadores para cada vértice:
+    \[\mathbb{E}[X^2] = \mathbb{E}[X] + \sum_{u \neq v} \Pr(d_G(u) < d \text{ e } d_G(v) < d).\]
+
+    Como a dependência entre os graus de dois vértices distintos se limita à presença de apenas uma possível aresta $\{u,v\}$, os eventos são assintoticamente independentes[cite: 3]. 
+    Assim, a soma da probabilidade conjunta converge para:
+    \[\sum_{u \neq v} \Pr(d_G(u) < d \text{ e } d_G(v) < d) \sim n^2 (\Pr(d_G(u) < d))^2 \sim (\mathbb{E}[X])^2.\]
+
+    Substituindo este comportamento na inequação da variância, obtemos:
+    \[\frac{\mathbb{E}[X^2]}{(\mathbb{E}[X])^2} \sim \frac{\mathbb{E}[X] + (\mathbb{E}[X])^2}{(\mathbb{E}[X])^2} = \frac{1}{\mathbb{E}[X]} + 1.\]
+
+    Como já demonstramos que $\mathbb{E}[X] \to \infty$, o termo $\frac{1}{\mathbb{E}[X]} \to 0$. Isso resulta em:
+    \[\Pr(X = 0) \le \frac{1}{\mathbb{E}[X]} \to 0.\]
+
+    Portanto, concluímos que $\Pr(\delta(G(n,p)) \ge d) \to 0$, o que completa a demonstração rigorosa do teorema em ambos os limiares.
+\end{sol}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Do not alter anything below this line.
