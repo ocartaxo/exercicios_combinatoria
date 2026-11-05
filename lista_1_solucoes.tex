@@ -63,7 +63,9 @@
         \#\{\text{ruins}\}\ \le\ \binom{n}{k}\,2^{\binom{n}{2} - \binom{k}{2}+1} < 2^{\binom{n}{2}}
     \]
 
-    Divida agora por $2^{\binom{n}{2}}$, de modo que a desigualdade desejada assume a forma $\binom{n}{k}\,2^{\,1 -\binom{k}{2}} < 1$. Estime $\binom{n}{k}\le\bigl(\tfrac{en}{k}\bigr)^k$, o que decorre de $\binom{n}{k} \le n^k/k!$ junto com $k!\ge(k/e)^k$, e suponha $n \le 2^{k/2}$, obtendo $\binom{n}{k} \le \bigl(\tfrac{e}{k}\bigr)^k\,2^{\,k^2/2}$. Multiplicando por $2^{\,1-k(k-1)}$ e somando os expoentes de base dois, que resultam em $1+\tfrac{k}{2}$, conclua que
+    Dividindo por $2^{\binom{n}{2}}$, a desigualdade desejada assume a forma $\binom{n}{k}\,2^{\,1 -\binom{k}{2}} < 1$.
+    \newpage
+    Estime $\binom{n}{k}\le\bigl(\tfrac{en}{k}\bigr)^k$, o que decorre de $\binom{n}{k} \le n^k/k!$ junto com $k!\ge(k/e)^k$, e suponha $n \le 2^{k/2}$, obtendo $\binom{n}{k} \le \bigl(\tfrac{e}{k}\bigr)^k\,2^{\,k^2/2}$. Multiplicando por $2^{\,1-k(k-1)}$ e somando os expoentes de base dois, que resultam em $1+\tfrac{k}{2}$, conclua que
     \[
         \binom{n}{k}\,2^{\,1-\binom{k}{2}}\ \le\ \Bigl( \frac{e}{k} \Bigr)^k \, 2^{\, 1+k/2} \ = \ 2\Bigl(\frac{e\sqrt{2}}{k}\Bigr)^k.
     \]
@@ -670,7 +672,7 @@ G_p := \{\, e\in E(K_n) : U_e\le p \,\}.
     \[
     f(p)=\mathbb{P}(G_p\in\mathcal{A})\le\mathbb{P}(G_{p'}\in\mathcal{A})=f(p').
     \]
-    Logo $f$ é não decrescente em $p$. $\blacksquare$
+    Logo $f$ é não decrescente em $p$.
 \end{sol}
 
 \begin{problem}{15}
