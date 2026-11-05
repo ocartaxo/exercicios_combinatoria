@@ -1,0 +1,460 @@
+% !TEX program = xelatex
+\documentclass[11pt, a4paper]{article}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage[portuguese, bidi=basic, provide=*]{babel}
+\babelfont{rm}{Noto Sans}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{booktabs}
+
+% \usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, decorations.pathreplacing}
+
+\setlist[itemize]{label={--}}
+
+\title{\textbf{Roteiro para Lista 1}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% EXERCÍCIO 1
+\subsection*{Exercício 1: Teorema de Ramsey Multicor ($K_N \to K_k$)}
+\textbf{Intuição Estrutural:} A prova baseia-se na aplicação iterativa do Princípio da Casa dos Pombos para construir uma sequência de vizinhanças aninhadas, forçando uma cor dominante a cada passo.
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item \textbf{Construção Iterativa:} Dado um vértice $v_1$ em $A_0 = V(K_n)$, ele tem $n-1$ arestas. Pelo Princípio da Casa dos Pombos, pelo menos $(n-1)/r$ arestas compartilham uma mesma cor $c_1$. Define-se $A_1$ como os vizinhos alcançados por $c_1$.
+    \item \textbf{Aninhamento:} Repete-se o processo tomando $v_2 \in A_1$, garantindo uma cor $c_2$ dominante para $A_2$, resultando em $A_0 \supseteq A_1 \supseteq \dots \supseteq A_t$.
+    \item \textbf{Decisão Unilateral:} Para qualquer par $v_i, v_j$ (com $i < j$), a aresta $v_iv_j$ tem cor $c_i$, pois $v_j \in A_{j-1} \subseteq A_i$. A cor depende exclusivamente do vértice de menor índice.
+    \item \textbf{Garantia da Clique:} Se $t = r(k-1)+1$, uma mesma cor $c$ deve aparecer entre os $c_i$ pelo menos $k$ vezes (Casa dos Pombos novamente). Os vértices correspondentes a esses passos formarão um $K_k$ monocromático.
+\end{enumerate}
+\begin{tikzpicture}[
+    >=Stealth,
+    vertex/.style={circle, draw=black, thick, fill=white, minimum size=18pt, inner sep=1pt, font=\small},
+    red_edge/.style={draw=red!80!black, very thick},
+    blue_edge/.style={draw=blue!80!black, very thick, dashed},
+    set_box/.style={ellipse, draw=gray!70, thick, fill=gray!5}
+]
+
+    % Título da Parte 1
+    \node[font=\bfseries\large] at (5.5, 4.2) {1. Construção dos Conjuntos Encaixados ($A_0 \supseteq A_1 \supseteq A_2 \supseteq A_3$)};
+
+    % Conjuntos Encaixados (Elipses da maior para a menor)
+    \draw[fill=gray!8, draw=gray!60, thick] (5.5,0) ellipse (6.2cm and 3.2cm);
+    \node[font=\bfseries] at (0.3, 2.2) {$A_0 = V(K_n)$};
+
+    \draw[fill=red!6, draw=red!50!black, thick] (6.5,0) ellipse (4.8cm and 2.5cm);
+    \node[font=\bfseries, red!60!black] at (2.8, 1.8) {$A_1$};
+
+    \draw[fill=blue!6, draw=blue!50!black, thick] (7.6,0) ellipse (3.4cm and 1.8cm);
+    \node[font=\bfseries, blue!60!black] at (5.0, 1.3) {$A_2$};
+
+    \draw[fill=red!12, draw=red!60!black, thick] (8.7,0) ellipse (2.0cm and 1.1cm);
+    \node[font=\bfseries, red!60!black] at (7.4, 0.7) {$A_3$};
+
+    % Vértices escolhidos em cada etapa
+    \node[vertex, fill=red!20] (v1) at (0.5, 0) {$v_1$};
+    \node[vertex, fill=blue!20] (v2) at (3.2, 0) {$v_2$};
+    \node[vertex, fill=red!20] (v3) at (5.8, 0) {$v_3$};
+    \node[vertex, fill=red!20] (v4) at (8.8, 0) {$v_j$};
+
+    % Arestas de v_1 (cor c_1 = vermelho) para todo A_1
+    \draw[red_edge, ->] (v1) to[bend left=25] node[above, sloped, font=\scriptsize] {$\chi(v_1 u) = c_1$} (v2);
+    \draw[red_edge, ->] (v1) to[bend left=38] (v3);
+    \draw[red_edge, ->] (v1) to[bend left=45] (v4);
+
+    % Arestas de v_2 (cor c_2 = azul) para todo A_2
+    \draw[blue_edge, ->] (v2) to[bend right=25] node[below, sloped, font=\scriptsize] {$\chi(v_2 u) = c_2$} (v3);
+    \draw[blue_edge, ->] (v2) to[bend right=38] (v4);
+
+    % Arestas de v_3 (cor c_3 = vermelho) para todo A_3
+    \draw[red_edge, ->] (v3) to node[above, font=\scriptsize] {$\chi(v_3 u) = c_3$} (v4);
+
+    % Legenda / Explicação na base
+    \node[align=center, font=\footnotesize, draw=black!40, rounded corners, fill=yellow!10, inner sep=6pt] at (5.5, -4.2) {
+        \textbf{Propriedade Fundamental:} Para $i < j$, como $v_j \in A_{j-1} \subseteq A_i$, a cor de $v_i v_j$ é decidida unicamente por $v_i$ ($\chi(v_i v_j) = c_i$).\\
+        Acima, $c_1 = c_3 = \text{vermelho}$. Logo, os vértices $\{v_1, v_3, v_j\}$ formam um triângulo ($K_3$) inteiramente vermelho!
+    };
+
+\end{tikzpicture}
+
+% EXERCÍCIO 2
+\subsection*{Exercício 2: Limite Inferior de Erdős para R(k) (1947)}
+\textbf{Intuição Probabilística:} Ao invés de construir uma coloração, contamos todas as colorações e mostramos que a proporção daquelas que contêm uma clique monocromática é estritamente menor que 1. Se a probabilidade de falha é $< 1$, uma coloração válida \textit{deve} existir.
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item \textbf{Espaço Amostral:} Existem $2^{\binom{n}{2}}$ colorações possíveis das arestas de $K_n$.
+    \item \textbf{Contagem de Colorações Ruins:} Fixado um conjunto de $k$ vértices, existem 2 maneiras de colori-lo monocromaticamente. As outras arestas permanecem livres ($2^{\binom{n}{2}-\binom{k}{2}}$).
+    \item \textbf{Cota da União:} Multiplica-se pelo número de conjuntos possíveis $\binom{n}{k}$. A condição de existência de uma boa coloração surge quando:
+    \[ \binom{n}{k}2^{1-\binom{k}{2}} < 1 \]
+    \item \textbf{Aproximação Algébrica:} Utilizando a aproximação padrão $\binom{n}{k} \le (en/k)^k$ e assumindo $n \le 2^{k/2}$, a expressão simplifica para $2(e\sqrt{2}/k)^k < 1$, que se verifica para $k \ge 5$.
+\end{enumerate}
+\begin{tikzpicture}[
+    >=Stealth,
+    vertexS/.style={circle, draw=red!80!black, very thick, fill=red!15, minimum size=20pt, font=\small\bfseries},
+    vertexR/.style={circle, draw=gray!80!black, thick, fill=gray!15, minimum size=20pt, font=\small},
+    locked_edge/.style={draw=red!80!black, line width=1.8pt},
+    free_edge/.style={draw=gray!70!black, thick, dashed},
+    boxS/.style={draw=red!80!black, thick, fill=red!10, minimum width=0.8cm, minimum height=0.7cm, font=\scriptsize},
+    boxF/.style={draw=gray!70!black, thick, fill=gray!10, minimum width=0.8cm, minimum height=0.7cm, font=\scriptsize}
+]
+
+    % =========================================================
+    % PARTE ESQUERDA: ESTRUTURA DO GRAFO K_n
+    % =========================================================
+    \node[font=\bfseries\large] at (0, 4.3) {1. Partição das Arestas em $K_n$};
+
+    % Elipse do grafo K_n
+    \draw[fill=gray!5, draw=gray!50, thick, rounded corners=20pt] (-3.8, -2.5) rectangle (3.8, 3.5);
+    \node[font=\bfseries, gray!60!black] at (3.1, 3.1) {$K_n$};
+
+    % Conjunto S (k vértices)
+    \draw[fill=red!6, draw=red!60!black, thick, dashed] (-1.5, 0.6) circle (1.8cm);
+    \node[font=\bfseries, red!75!black] at (-1.5, 2.75) {Subconjunto $S$ ($|S|=k$)};
+
+    % Vértices de S
+    \node[vertexS] (v1) at (-2.4, 1.3) {$v_1$};
+    \node[vertexS] (v2) at (-0.6, 1.3) {$v_2$};
+    \node[vertexS] (vk) at (-1.5, -0.4) {$v_k$};
+
+    % Vértices fora de S (V \ S)
+    \node[font=\bfseries, gray!70!black] at (2.1, 2.3) {$V(K_n) \setminus S$};
+    \node[vertexR] (u1) at (2.1, 1.3) {$u_1$};
+    \node[vertexR] (u2) at (2.6, -0.2) {$u_2$};
+    \node[vertexR] (un) at (1.5, -1.5) {$u_{n-k}$};
+
+    % Arestas Travadas (Internas a S)
+    \draw[locked_edge] (v1) -- (v2);
+    \draw[locked_edge] (v2) -- (vk);
+    \draw[locked_edge] (v1) -- (vk);
+
+    % Arestas Livres (Cruzando de S para V\S e internas a V\S)
+    \draw[free_edge] (v2) -- (u1);
+    \draw[free_edge] (v2) -- (u2);
+    \draw[free_edge] (vk) -- (u1);
+    \draw[free_edge] (vk) -- (u2);
+    \draw[free_edge] (vk) -- (un);
+    \draw[free_edge] (u1) -- (u2);
+    \draw[free_edge] (u2) -- (un);
+    \draw[free_edge] (u1) to[bend left=20] (un);
+
+    % Legenda do Grafo
+    \draw[locked_edge] (-3.2, -1.8) -- (-2.8, -1.8) node[right, font=\footnotesize, text=black] {Arestas fixadas em $S$: $\binom{k}{2}$};
+    \draw[free_edge]   (-3.2, -2.2) -- (-2.8, -2.2) node[right, font=\footnotesize, text=black] {Arestas livres fora de $S$: $\binom{n}{2}-\binom{k}{2}$};
+
+    % =========================================================
+    % PARTE DIREITA: CONTAGEM MULTIPLICATIVA (VETOR DE ARESTAS)
+    % =========================================================
+    \node[font=\bfseries\large] at (9.2, 4.3) {2. Contagem de Colorações com $S$ Monocromático};
+
+    % Bloco Travado (internas a S)
+    \node[boxS] (e1) at (5.8, 1.8) {$e_1$};
+    \node[boxS, right=0pt of e1] (e2) {$e_2$};
+    \node[boxS, right=0pt of e2] (edots1) {$\cdots$};
+    \node[boxS, right=0pt of edots1] (ek) {$e_{\binom{k}{2}}$};
+
+    % Bloco Livre (fora de S)
+    \node[boxF, right=0.4cm of ek] (f1) {$e_{\binom{k}{2}+1}$};
+    \node[boxF, right=0pt of f1] (f2) {$e_{\binom{k}{2}+2}$};
+    \node[boxF, right=0pt of f2] (fdots) {$\cdots$};
+    \node[boxF, right=0pt of fdots] (fn) {$e_{\binom{n}{2}}$};
+
+    % Chaves superiores
+    \draw[decorate, decoration={brace, amplitude=6pt}, thick, red!80!black]
+        (e1.north west) -- (ek.north east)
+        node[midway, above=8pt, font=\footnotesize\bfseries, align=center]
+        {$\binom{k}{2}$ arestas internas a $S$\\(Bloco Travado)};
+
+    \draw[decorate, decoration={brace, amplitude=6pt}, thick, gray!70!black]
+        (f1.north west) -- (fn.north east)
+        node[midway, above=8pt, font=\footnotesize\bfseries, align=center]
+        {$\binom{n}{2} - \binom{k}{2}$ arestas restantes\\(Arestas Livres)};
+
+    % Chaves inferiores explicando as escolhas
+    \draw[decorate, decoration={brace, amplitude=6pt, mirror}, thick, red!80!black]
+        (e1.south west) -- (ek.south east)
+        node[midway, below=8pt, font=\tiny, align=center] (c1)
+        {Todas da mesma cor:\\ \textbf{2 opções ao todo}\\(Tudo Vermelho ou Tudo Azul)};
+
+    \draw[decorate, decoration={brace, amplitude=6pt, mirror}, thick, gray!70!black]
+        (f1.south west) -- (fn.south east)
+        node[midway, below=8pt, font=\tiny, align=center] (c2)
+        {2 cores independentes por aresta:\\ $\underbrace{2 \times 2 \times \cdots \times 2}_{\binom{n}{2}-\binom{k}{2}\text{ vezes}} = \mathbf{2^{\binom{n}{2}-\binom{k}{2}}}$ \textbf{opções}};
+
+    % Caixa de resultado final
+    \node[draw=black!70, thick, rounded corners=6pt, fill=yellow!12, inner sep=8pt, font=\small, align=center]
+        at (9.2, -1.5) {
+        \textbf{Pelo Princípio Multiplicativo (para $S$ fixo):}\\[4pt]
+        $\displaystyle \underbrace{2}_{\text{cor de } S} \cdot \underbrace{2^{\binom{n}{2}-\binom{k}{2}}}_{\text{arestas livres}} = 2^{\binom{n}{2}-\binom{k}{2}+1} \text{ colorações}$
+    };
+
+\end{tikzpicture}
+
+% EXERCÍCIO 3
+\subsection*{Exercício 3: Teorema de Kővári-Sós-Turán}
+\textbf{Intuição Estrutural:} Dupla contagem em grafos estrelas $K_{1,s}$ (chamados de $s$-cerejas). Contamos as cerejas a partir do vértice central e, depois, limitamos a partir das pontas (conjunto de $s$ vértices).
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item \textbf{Contagem a partir do centro:} Um vértice $v$ forma $\binom{d(v)}{s}$ cerejas. O total no grafo é $\sum \binom{d(v)}{s}$.
+    \item \textbf{Contagem pelas extremidades:} Qualquer subconjunto de $s$ vértices só pode ser o lado direito de, no máximo, $t-1$ cerejas (se fossem $t$, formariam um $K_{s,t}$). O total é $\le (t-1)\binom{n}{s}$.
+    \item \textbf{Convexidade:} Como $\binom{x}{s}$ é convexa, o mínimo ocorre no grau médio $d_{avg} = 2|E(G)|/n$.
+    \[ n\binom{2|E(G)|/n}{s} \le (t-1)\binom{n}{s} \]
+    \item \textbf{Simplificação Assintótica:} Expandindo os binomiais pelo termo dominante $\mathcal{O}(x^s)$, isola-se $|E(G)|$, provando que o crescimento é limitado por $\mathcal{O}(n^{2-1/s})$.
+\end{enumerate}
+
+% EXERCÍCIO 4
+\subsection*{Exercício 4: Lema de Pósa (Caminhos e Ciclos)}
+\textbf{Intuição Estrutural:} Em um caminho maximal, todos os vizinhos das extremidades devem estar contidos no próprio caminho. Pelo princípio da casa dos pombos, a intersecção de vizinhanças força uma aresta de retorno que cria um ciclo longo, impossibilitando a maximalidade se o caminho for curto.
+
+\begin{center}
+\begin{tikzpicture}[scale=1, every node/.style={circle, draw, minimum size=8mm, inner sep=1pt}]
+    % Vértices do caminho
+    \node (v0) at (0,0) {$v_0$};
+    \node (v1) at (1.5,0) {$v_1$};
+    \node[draw=none] (dots1) at (3,0) {$\dots$};
+    \node (vi1) at (4.5,0) {$v_{i-1}$};
+    \node (vi) at (6,0) {$v_i$};
+    \node[draw=none] (dots2) at (7.5,0) {$\dots$};
+    \node (vk) at (9,0) {$v_k$};
+
+    % Caminho base
+    \draw[thick] (v0) -- (v1) -- (dots1) -- (vi1) -- (vi) -- (dots2) -- (vk);
+
+    % Arestas que fecham o ciclo
+    \draw[thick, blue, bend right=45] (vk) to node[above, draw=none] {vizinho de $v_k$} (vi1);
+    \draw[thick, red, bend left=45] (v0) to node[above, draw=none] {vizinho de $v_0$} (vi);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item Assuma um caminho maximal $P$ com $k < 2\delta(G)$. Os conjuntos de vizinhos $N(v_0)$ e $N(v_k)$ estão obrigatoriamente dentro de $P$.
+    \item Desloque os vizinhos de $v_0$ uma posição para trás no caminho: $S = \{v_{i-1} \mid v_i \in N(v_0)\}$. O tamanho é $|S| \ge \delta(G)$.
+    \item Como $|S| + |N(v_k)| \ge 2\delta(G) > k$, os conjuntos se interceptam. Existe $v_{i-1}$ que é vizinho de $v_k$, cujo sucessor $v_i$ é vizinho de $v_0$.
+    \item O ciclo $C = (v_0, v_i, v_{i+1}, \dots, v_k, v_{i-1}, v_{i-2}, \dots, v_0)$ consome todos os vértices de $P$. Se o grafo é conexo e $k < n-1$, existe um vértice fora do ciclo conectado a ele, permitindo estender $P$, gerando um absurdo.
+\end{enumerate}
+
+% EXERCÍCIO 5
+\subsection*{Exercício 5: Subgrafo Bipartido em Grafo Livre de Triângulos}
+\textbf{Intuição Estrutural:} Se não há triângulos, a vizinhança do vértice de grau máximo $\Delta$ é perfeitamente independente. Dividimos o grafo em vizinhança e não-vizinhança.
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item Seja $v_{\Delta}$ o vértice de grau máximo. O conjunto $A = N(v_{\Delta})$ não possui arestas, senão formaria um triângulo com $v_{\Delta}$.
+    \item O conjunto restante é $B = V(G) \setminus A$. O número de arestas destruidoras da bipartição está inteiramente dentro de $B$.
+    \item Contagem de graus: A soma dos graus em $B$ contabiliza as arestas de $e(B)$ duas vezes e as de cruzamento uma vez. $k = |e(B)| + |e(G)| \le |V(B)|\Delta = (n-\Delta)\Delta$.
+    \item Por médias (MA-MG), $\Delta(n-\Delta) \le n^2/4$. Portanto $|e(G)| + |e(B)| \le n^2/4$. Como $|e(G)| \ge n^2/4 - t$, deduz-se que $|e(B)| \le t$.
+\end{enumerate}
+
+% EXERCÍCIO 6
+\subsection*{Exercício 6: Triângulos em Grafos $t$-longe de Bipartidos}
+\textbf{Intuição Estrutural:} Uma aresta interna à vizinhança $B_u = N(u)$ de um vértice $u$ forma exatamente um triângulo com $u$. Ao somarmos $e(B_u)$ para todos os vértices do grafo, obtemos $3T(G)$. A prova divide-se em duas frentes: (I) uma análise local em cada vértice $u$, onde particionamos $V(G)$ em $B_u = N(u)$ e $A_u = V(G) \setminus N(u)$, usamos o fato de $G$ ser $t$-longe de ser bipartido para limitar as arestas cruzadas $e(A_u, B_u)$ e calculamos a soma dos graus em $A_u$ para isolar $e(B_u)$; e (II) uma agregação global sobre todos os vértices $u \in V(G)$, aplicando dupla contagem (inversão de somatório) e a desigualdade das médias (MA-MG) para limitar o termo quadrático $\sum d(v)(n-d(v))$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.95, every node/.style={circle, draw, minimum size=6.5mm, inner sep=1pt}]
+    % Vértice raiz u (destacado no topo para visualizar o triângulo)
+    \node[draw=black, fill=gray!15, very thick] (u) at (3.0, 3.6) {$u$};
+
+    % Caixa do conjunto B_u = N(u)
+    \draw[rounded corners=8pt, draw=red!75!black, thick, fill=red!4] (0, 1.4) rectangle (6.0, 2.6);
+    \node[draw=none, fill=none, anchor=west] at (6.2, 2.0) {\small $B_u = N(u)$ ($|B_u| = d(u)$)};
+
+    % Vértices em B_u
+    \node[draw=red!80!black, thick, fill=white] (w1) at (1.5, 2.0) {$w_1$};
+    \node[draw=red!80!black, thick, fill=white] (w2) at (3.2, 2.0) {$w_2$};
+    \node[draw=red!80!black, thick, fill=white] (w3) at (4.8, 2.0) {$w_3$};
+
+    % Triângulo formado por u e uma aresta interna de B_u
+    \draw[very thick, red!80!black] (w1) -- node[above, draw=none, fill=none, font=\scriptsize] {$e(B_u)$} (w2);
+    \draw[thick, red!80!black, dashed] (u) -- (w1);
+    \draw[thick, red!80!black, dashed] (u) -- (w2);
+    \draw[thick, gray!70, dashed] (u) -- (w3);
+
+    % Caixa do conjunto A_u = V(G) \ N(u)
+    \draw[rounded corners=8pt, draw=blue!75!black, thick, fill=blue!4] (0, -0.8) rectangle (6.0, 0.4);
+    \node[draw=none, fill=none, anchor=west] at (6.2, -0.2) {\small $A_u = V(G) \setminus N(u)$ ($|A_u| = n - d(u)$)};
+
+    % Vértices em A_u
+    \node[draw=blue!80!black, thick, fill=white] (v1) at (1.5, -0.2) {$v_1$};
+    \node[draw=blue!80!black, thick, fill=white] (v2) at (3.2, -0.2) {$v_2$};
+    \node[draw=blue!80!black, thick, fill=white] (v3) at (4.8, -0.2) {$v_3$};
+
+    % Aresta interna em A_u
+    \draw[very thick, blue!80!black] (v1) -- node[below, draw=none, fill=none, font=\scriptsize] {$e(A_u)$} (v2);
+
+    % Arestas cruzadas e(A_u, B_u) (corte bipartido)
+    \draw[thick, black!65] (w1) -- (v1);
+    \draw[thick, black!65] (w2) -- (v1);
+    \draw[thick, black!65] (w2) -- (v3);
+    \draw[thick, black!65] (w3) -- (v3);
+    \node[draw=none, fill=none, anchor=west, font=\scriptsize] at (6.2, 0.9) {Corte bipartido: $e(A_u, B_u) \le e(G) - t$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Parte I --- Passo a Passo da Análise Local na Vizinhança de $u$:}
+\begin{enumerate}
+    \item \textbf{Contagem de Triângulos via Vizinhanças:} Seja $T(G)$ o número de triângulos em $G$. Toda aresta interna à vizinhança de um vértice $u$ forma um triângulo com $u$. Como cada triângulo possui três vértices, somar as arestas internas às vizinhanças de todos os vértices resulta em exatamente $3T(G)$.
+    \item \textbf{Bipartição Natural centrada em $u$:} Para cada $u \in V(G)$, defina a partição $B_u = N(u)$ e $A_u = V(G) \setminus N(u)$, com cardinalidades $|B_u| = d(u)$ e $|A_u| = n - d(u)$. As arestas de $G$ dividem-se em três conjuntos disjuntos:
+    \[ e(G) = e(A_u) + e(B_u) + e(A_u, B_u) \implies e(A_u) + e(B_u) = e(G) - e(A_u, B_u). \]
+    \item \textbf{Hipótese de Distância à Bipartição ($t$-longe):} O subgrafo formado pelas arestas entre $A_u$ e $B_u$ é bipartido. Como $G$ é $t$-longe de ser bipartido, qualquer subgrafo bipartido possui no máximo $e(G) - t$ arestas, logo $e(A_u, B_u) \le e(G) - t \iff e(G) - e(A_u, B_u) \ge t$. Combinando com a igualdade anterior, obtemos:
+    \[ e(A_u) + e(B_u) \ge t \implies e(A_u) \ge t - e(B_u). \]
+    \item \textbf{Soma dos Graus em $A_u$:} Ao somar os graus (em $G$) dos vértices $v \in A_u$, cada aresta interna a $A_u$ contribui com $2$ e cada aresta entre $A_u$ e $B_u$ contribui com $1$. Substituindo $e(A_u, B_u) = e(G) - e(A_u) - e(B_u)$, temos:
+    \[ \sum_{v \in A_u} d(v) = 2e(A_u) + e(A_u, B_u) = 2e(A_u) + e(G) - e(A_u) - e(B_u) = e(G) + e(A_u) - e(B_u). \]
+    \item \textbf{Isolamento Local de $2e(B_u)$:} Aplicando a desigualdade $e(A_u) \ge t - e(B_u)$ na expressão da soma dos graus em $A_u$, eliminamos $e(A_u)$ e isolamos $2e(B_u)$:
+    \[ \sum_{v \in A_u} d(v) \ge e(G) + \big(t - e(B_u)\big) - e(B_u) = e(G) + t - 2e(B_u) \implies 2e(B_u) \ge e(G) + t - \sum_{v \in A_u} d(v). \]
+\end{enumerate}
+
+\textbf{Parte II --- Passo a Passo da Agregação Global e Dupla Contagem:}
+\begin{enumerate}[resume]
+    \item \textbf{Somatório Global sobre $u \in V(G)$:} Somando a desigualdade local para todos os $n$ vértices $u \in V(G)$, estabelecemos a inequação global:
+    \[ 2\sum_{u \in V(G)} e(B_u) \ge n\big(e(G) + t\big) - \sum_{u \in V(G)} \sum_{v \in A_u} d(v). \]
+    \item \textbf{Inversão da Ordem do Somatório Duplo:} Em vez de fixar $u$ e somar $d(v)$ para $v \in A_u$, fixamos $v \in V(G)$ e contamos para quantos vértices $u$ vale a condição $v \in A_u$ (isto é, $v \notin N(u)$). Como existem exatamente $n - d(v)$ vértices que não são vizinhos de $v$, o somatório duplo reescreve-se como:
+    \[ \sum_{u \in V(G)} \sum_{v \in A_u} d(v) = \sum_{v \in V(G)} d(v) \cdot |\{u \in V(G) : v \notin N(u)\}| = \sum_{v \in V(G)} d(v)\big(n - d(v)\big). \]
+    \item \textbf{Cota via Desigualdade das Médias (MA-MG):} Pela desigualdade entre as médias aritmética e geométrica, temos $d(v)(n - d(v)) \le \frac{n^2}{4}$ para todo $v \in V(G)$. Somando sobre os $n$ vértices do grafo:
+    \[ \sum_{u \in V(G)} \sum_{v \in A_u} d(v) = \sum_{v \in V(G)} d(v)\big(n - d(v)\big) \le \sum_{v \in V(G)} \frac{n^2}{4} = n \cdot \frac{n^2}{4}. \]
+    \item \textbf{Substituição e Fechamento da Cota de Triângulos:} Substituindo o limite superior do somatório duplo na inequação global do Passo 6, obtemos:
+    \[ 2\sum_{u \in V(G)} e(B_u) \ge n\big(e(G) + t\big) - n\frac{n^2}{4} \implies \sum_{u \in V(G)} e(B_u) \ge \frac{n}{2}\left(e(G) + t - \frac{n^2}{4}\right). \]
+    Como a soma das arestas internas às vizinhanças equivale a $3T(G)$, dividimos ambos os lados por $3$ para concluir a prova:
+    \[ T(G) = \frac{1}{3}\sum_{u \in V(G)} e(B_u) \ge \frac{n}{6}\left(e(G) + t - \frac{n^2}{4}\right). \]
+\end{enumerate}
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item \textbf{Redução Local:} Para cada vértice $u$, separe o grafo em vizinhos ($B_u$) e não-vizinhos ($A_u$). O corte entre eles é bipartido, logo deixa pelo menos $t$ arestas no interior das partes: $e(A_u) + e(B_u) \ge t$.
+    \item \textbf{Eliminação de $e(A_u)$:} Use a identidade $\sum_{v \in A_u} d(v) = 2e(A_u) + e(A_u, B_u) = e(G) + e(A_u) - e(B_u)$ junto com $e(A_u) \ge t - e(B_u)$ para isolar as arestas geradoras de triângulos: $2e(B_u) \ge e(G) + t - \sum_{v \in A_u} d(v)$.
+    \item \textbf{Dupla Contagem e Maximização:} Some para todo $u \in V(G)$, inverta a soma dupla usando $\sum_{u}\sum_{v \in A_u} d(v) = \sum_{v} d(v)(n-d(v)) \le n\frac{n^2}{4}$ (por MA-MG) e divida por $6$ (fator $2$ de $2e(B_u)$ vezes fator $3$ de $3T(G)$).
+\end{enumerate}
+
+% EXERCÍCIO 7
+\subsection*{Exercício 7: Teorema de Gerencsér-Gyárfás ($r(P_k) = \lceil 3k/2 \rceil$)}
+\textbf{Intuição Estrutural:} O caminho $P_k$ possui comprimento $k$, logo contém $k+1$ vértices. A prova divide-se em duas frentes: (I) uma construção em blocos para o limite inferior que confina caminhos vermelhos à maior clique e força caminhos azuis a alternarem em um subgrafo bipartido; e (II) uma prova por contradição para o limite superior baseada no \textit{Lema de Cobertura de Caminhos}, onde maximizamos o caminho vermelho $R$ para forçar uma alta densidade de arestas azuis entre as extremidades do caminho azul $B$ e o interior de $R$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, every node/.style={circle, draw, minimum size=6.5mm, inner sep=1pt}]
+    % Caminho Azul B
+    \node[draw=blue!80!black, thick] (u1) at (0, 2.2) {$u_1$};
+    \node[draw=blue!80!black, thick] (u2) at (1.8, 2.2) {$u_2$};
+    \node[draw=none] (udots) at (3.6, 2.2) {$\dots$};
+    \node[draw=blue!80!black, thick] (ub) at (5.4, 2.2) {$u_b$};
+    \node[draw=none, anchor=west] at (6.2, 2.2) {\small Caminho Azul $B$ ($b$ vértices)};
+
+    % Caminho Vermelho R (maximal)
+    \node[draw=red!80!black, thick] (v1) at (0, 0) {$v_1$};
+    \node[draw=red!80!black, thick] (v2) at (1.8, 0) {$v_2$};
+    \node[draw=red!80!black, thick] (v3) at (3.6, 0) {$v_3$};
+    \node[draw=none] (vdots) at (4.5, 0) {$\dots$};
+    \node[draw=red!80!black, thick] (vr) at (5.4, 0) {$v_r$};
+    \node[draw=none, anchor=west] at (6.2, 0) {\small Caminho Vermelho $R$ ($r$ maximal)};
+
+    % Arestas internas dos caminhos
+    \draw[very thick, blue] (u1) -- (u2) -- (udots) -- (ub);
+    \draw[very thick, red] (v1) -- (v2) -- (v3) -- (vdots) -- (vr);
+
+    % Arestas de cruzamento forçadas a ser azuis pela maximalidade de R
+    \draw[thick, blue, dashed] (u1) -- (v1);
+    \draw[thick, blue, dashed] (u1) -- (v3);
+    \draw[thick, blue, dashed] (u1) -- (vr);
+    \draw[thick, blue, dashed] (ub) -- (v2);
+    \draw[thick, blue, dashed] (ub) -- (vr);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Parte I --- Passo a Passo do Limite Inferior ($r(P_k) \ge \lceil 3k/2 \rceil$):}
+\begin{enumerate}
+    \item \textbf{Partição Extremal ($N = \lceil 3k/2 \rceil - 1$):} Divida os $N$ vértices de $K_N$ em dois conjuntos disjuntos $A$ e $B$ tais que $|A| = k$ e $|B| = \lfloor (k-1)/2 \rfloor$. A soma resulta exatamente em $k + \lfloor (k-1)/2 \rfloor = \lceil 3k/2 \rceil - 1 = N$.
+    \item \textbf{Coloração em Blocos:} Pinte todas as arestas internas a $A$ e internas a $B$ de vermelho (duas cliques vermelhas disjuntas) e todas as arestas entre $A$ e $B$ de azul (um grafo bipartido completo azul).
+    \item \textbf{Confinamento Vermelho:} Sem arestas vermelhas cruzando entre $A$ e $B$, qualquer caminho vermelho vive inteiramente em $A$ ou inteiramente em $B$. Como $|A| > |B|$, o maior caminho vermelho tem no máximo $|A| = k$ vértices.
+    \item \textbf{Alternância Azul:} Como o subgrafo azul é bipartido entre $A$ e $B$, todo caminho azul alterna estritamente entre os dois conjuntos. Sendo $B$ o menor conjunto, o caminho azul visita no máximo os $|B|$ vértices de $B$ e no máximo $|B| + 1$ vértices de $A$, totalizando no máximo $2|B| + 1 = 2\lfloor (k-1)/2 \rfloor + 1 \le k$ vértices. Logo, nenhum caminho monocromático atinge $k+1$ vértices.
+\end{enumerate}
+
+\textbf{Parte II --- Passo a Passo do Limite Superior ($r(P_k) \le \lceil 3k/2 \rceil$):}
+\begin{enumerate}[resume]
+    \item \textbf{Hipótese por Absurdo e Lema de Cobertura:} Tome $N = \lceil 3k/2 \rceil$ e suponha que exista uma 2-coloração de $K_N$ sem $P_k$ monocromático (sem caminhos de $k+1$ vértices). Pelo Lema de Gerencsér-Gyárfás, $V(K_N)$ pode ser particionado em um caminho vermelho $R = (v_1, \dots, v_r)$ e um caminho azul $B = (u_1, \dots, u_b)$ disjuntos, com $r + b = N$.
+    \item \textbf{Escolha Maximal e Cota para $B$:} Escolha a partição que \textit{maximiza} o tamanho $r$ do caminho vermelho $R$. Pela hipótese de absurdo, $r \le k$ e $b \le k$. Disso decorre o limite inferior para o tamanho de $B$:
+    \[ b = N - r \ge \left\lceil \frac{3k}{2} \right\rceil - k = \left\lceil \frac{k}{2} \right\rceil. \]
+    \item \textbf{Bloqueio nas Pontas ($v_r u_1$ é Azul):} A aresta $v_r u_1$ não pode ser vermelha; se fosse, estenderíamos $R$ para $(v_1, \dots, v_r, u_1)$ com tamanho $r+1$ e reduziríamos $B$ para $(u_2, \dots, u_b)$, violando a maximalidade de $r$. Logo, $v_r u_1$ é obrigatoriamente azul.
+    \item \textbf{Bloqueio de Inserção no Interior de $R$:} Não é possível inserir $u_1$ entre dois vértices adjacentes $v_i$ e $v_{i+1}$ de $R$ usando duas arestas vermelhas, pois isso também aumentaria $R$ para $r+1$ vértices. Assim, para cada par consecutivo $(v_i, v_{i+1})$ em $R$, pelo menos uma das arestas ligadas a $u_1$ é azul.
+    \item \textbf{Contagem de Arestas Azuis nas Extremidades de $B$:} Combinando os dois passos anteriores, o vértice $u_1$ incide em pelo menos $\lceil r/2 \rceil$ arestas azuis conectadas a $R$. Simetricamente, o vértice final $u_b$ também incide em pelo menos $\lceil r/2 \rceil$ arestas azuis ligadas a $R$.
+    \item \textbf{Fusão por Atalhos Azuis e Contradição:} Com as extremidades de $B$ maciçamente conectadas a $R$ por arestas azuis, forma-se uma estrutura cíclica que permite mesclar todos os $b$ vértices de $B$ com pelo menos $\lfloor r/2 \rfloor + 1$ vértices de $R$ através de atalhos azuis. Usando a identidade $r - \lfloor r/2 \rfloor = \lceil r/2 \rceil$, o tamanho desse novo caminho azul é:
+    \[ b + \left\lfloor \frac{r}{2} \right\rfloor + 1 = N - r + \left\lfloor \frac{r}{2} \right\rfloor + 1 = N - \left\lceil \frac{r}{2} \right\rceil + 1. \]
+    Substituindo $N = k + \lceil k/2 \rceil$ e usando que $r \le k \implies \lceil r/2 \rceil \le \lceil k/2 \rceil$, obtemos no mínimo:
+    \[ \left(k + \left\lceil \frac{k}{2} \right\rceil\right) - \left\lceil \frac{k}{2} \right\rceil + 1 = k + 1 \text{ vértices.} \]
+    Isso força um caminho azul de tamanho $k+1$, contradizendo a premissa inicial e provando que $r(P_k) = \lceil 3k/2 \rceil$.
+\end{enumerate}
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item \textbf{Limite Inferior:} Construção explícita de dois componentes (tamanhos $k$ e $\lfloor (k-1)/2 \rfloor$). O caminho vermelho restringe-se ao maior bloco, e o azul precisa oscilar entre os dois. Nenhum alcança $k+1$.
+    \item \textbf{Limite Superior:} Considere a partição maximal para o caminho vermelho $R$. Pela maximalidade, a aresta do último vértice de $R$ para o primeiro de $B$ ($u_1$) \textit{tem} que ser azul, caso contrário $R$ cresceria.
+    \item O vértice azul da ponta enraíza-se maciçamente nas adjacências de $R$, permitindo que o caminho azul "pule" para dentro do caminho vermelho, usando os vértices vermelhos como "pontes" azuis, somando vértices e garantindo tamanho $> k$.
+\end{enumerate}
+
+% EXERCÍCIOS 8 E 9
+\subsection*{Exercício 8 e 9: Independência de Variáveis Aleatórias}
+\textbf{Ex 8 (Contraexemplo):} Independência dois a dois não garante independência mútua. O clássico lançamento de duas moedas com eventos $A$ (moeda 1 coroa), $B$ (moeda 2 coroa), $C$ (mesmo resultado). $P(A \cap B \cap C) = 1/4 \ne P(A)P(B)P(C) = 1/8$.
+
+\textbf{Ex 9 (Produto de VA Independentes):} Demonstração direta via Fubini e fatoração da densidade conjunta. A independência quebra a integral dupla $\iint xy f(x,y) dx dy$ em duas integrais marginais cujo produto é exatamente $\mathbb{E}[X_1]\mathbb{E}[X_2]$.
+
+% EXERCÍCIO 10
+\subsection*{Exercício 10: Limite do Número de Independência por Probabilidade}
+\textbf{Intuição Probabilística:} Como achar um conjunto independente grande sem construir heurísticas complexas? Sorteie a ordem dos vértices e retenha os que aparecem "primeiro" entre todos os seus vizinhos. Esse grupo é, por definição, independente.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, every node/.style={circle, draw, minimum size=6mm, inner sep=1pt}]
+    \node[fill=gray!30] (a) at (0,0) {$v_a$};
+    \node[fill=gray!30] (b) at (2,0) {$v_b$};
+    \node[fill=gray!30] (c) at (4,0) {$v_c$};
+    \node (d) at (6,0) {$v_d$};
+    \node (e) at (8,0) {$v_e$};
+
+    \draw[thick, ->] (a) edge[bend left=30] (d);
+    \draw[thick, ->] (b) edge[bend left=30] (e);
+    \draw[thick, ->] (c) edge[bend left=30] (d);
+    
+    \node[draw=none, yshift=-0.7cm] at (a) {$\sigma=1$};
+    \node[draw=none, yshift=-0.7cm] at (d) {$\sigma=4$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item Defina uma ordem aleatória uniforme $\sigma$ de $V$. O evento "v é o menor na sua vizinhança" garante independência. (Uma aresta entre os guardados implicaria que um deles tem um vizinho menor).
+    \item O conjunto resultante $A$ tem esperança igual à soma das probabilidades indicadoras.
+    \item $P(v \in A) = \frac{1}{d(v)+1}$, pois todos os elementos da vizinhança fechada $N[v]$ têm chance idêntica de cair na primeira posição.
+    \item Como $\alpha(G) \ge |A|$ em \textit{qualquer} realização, ele supera a média: $\alpha(G) \ge \mathbb{E}[|A|] = \sum \frac{1}{d(v)+1}$.
+\end{enumerate}
+
+% EXERCÍCIO 11 E 12
+\subsection*{Exercício 11 e 12: Jensen e Supersaturação}
+\textbf{Ex 11 (Jensen):} Um princípio geométrico simples: uma função convexa está sempre acima da sua reta tangente. Expandindo Taylor até o termo linear na esperança $x_0 = \mathbb{E}[X]$, a linearidade anula o termo de primeiro grau, restando a prova.
+
+\textbf{Ex 12 (Supersaturação Fraca):} Estratégia de remoção de arestas. Se houvesse menos que $ex(n, H)$ cópias, poderíamos destruir todas removendo uma aresta por cópia. O grafo restante teria $\ge 2 \cdot ex(n, H) - k$ arestas. Para quebrar a restrição extremal $e(G') \le ex(n, H)$, a álgebra isola e prova a contradição direta.
+
+% EXERCÍCIO 13
+\subsection*{Exercício 13: Teorema de Turán via Probabilidade}
+\textbf{Intuição Estrutural e Algébrica:} Conecta-se grafos complementares, o Exercício 10 e a desigualdade de Cauchy-Schwarz.
+
+\textbf{Passo a Passo Rigoroso:}
+\begin{enumerate}
+    \item $G$ é livre de $K_r \implies$ o complementar $\overline{G}$ tem número de independência $< r$.
+    \item Pelo Ex 10, $\alpha(\overline{G}) \ge \sum \frac{1}{1+\overline{d}(v)} = \sum \frac{1}{n-d(v)}$. Portanto $r-1 \ge \sum \frac{1}{n-d(v)}$.
+    \item Usa-se Cauchy-Schwarz no somatório com os termos $(n-d(v))$. O somatório cruzado gera $(n^2 - 2e(G))$. Isola-se o termo de arestas, recuperando exatamente o limitante clássico da densidade de Turán.
+\end{enumerate}
+
+% EXERCÍCIO 14 E 15
+\subsection*{Exercício 14 e 15: Grafos Aleatórios (Acoplamento e Thresholds)}
+\textbf{Ex 14 (Monotonia):} Argumento de \textit{Coupling}. Usa-se uma variável uniforme $U_e \in [0,1]$ para cada aresta e modela-se $G_p$ incluindo as arestas onde $U_e \le p$. Como $p < p'$ implica $G_p \subseteq G_{p'}$, qualquer propriedade crescente conservada em subgrafos tem probabilidade monotonamente crescente em $p$.
+
+\textbf{Ex 15 (Threshold de Grau Mínimo):} Utiliza os dois pilares do Método Probabilístico.
+\begin{enumerate}
+    \item \textbf{Primeiro Momento (p acima do limiar):} A esperança de vértices com grau isolado cai a 0. Aplica-se Markov: $\mathbb{P}(X \ge 1) \le \mathbb{E}[X] \to 0$. O grafo com probabilidade tendendo a 1 atende à restrição de grau mínimo.
+    \item \textbf{Segundo Momento (p abaixo do limiar):} A esperança de vértices de baixo grau diverge ($\mathbb{E}[X] \to \infty$). É preciso Chebyshev para limitar a probabilidade de falha usando a variância. Como graus baixos são localmente independentes, $\mathbb{E}[X^2] / \mathbb{E}[X]^2 \to 1$, o que impulsiona a convergência da probabilidade de isolamento para 1.
+\end{enumerate}
+
+\end{document}
