@@ -86,14 +86,6 @@
 \subsection*{Exercício 2: Limite Inferior de Erdős para R(k) (1947)}
 \textbf{Intuição Probabilística:} Ao invés de construir uma coloração, contamos todas as colorações e mostramos que a proporção daquelas que contêm uma clique monocromática é estritamente menor que 1. Se a probabilidade de falha é $< 1$, uma coloração válida \textit{deve} existir.
 
-\textbf{Passo a Passo Rigoroso:}
-\begin{enumerate}
-    \item \textbf{Espaço Amostral:} Existem $2^{\binom{n}{2}}$ colorações possíveis das arestas de $K_n$.
-    \item \textbf{Contagem de Colorações Ruins:} Fixado um conjunto de $k$ vértices, existem 2 maneiras de colori-lo monocromaticamente. As outras arestas permanecem livres ($2^{\binom{n}{2}-\binom{k}{2}}$).
-    \item \textbf{Cota da União:} Multiplica-se pelo número de conjuntos possíveis $\binom{n}{k}$. A condição de existência de uma boa coloração surge quando:
-    \[ \binom{n}{k}2^{1-\binom{k}{2}} < 1 \]
-    \item \textbf{Aproximação Algébrica:} Utilizando a aproximação padrão $\binom{n}{k} \le (en/k)^k$ e assumindo $n \le 2^{k/2}$, a expressão simplifica para $2(e\sqrt{2}/k)^k < 1$, que se verifica para $k \ge 5$.
-\end{enumerate}
 \begin{tikzpicture}[
     >=Stealth,
     vertexS/.style={circle, draw=red!80!black, very thick, fill=red!15, minimum size=20pt, font=\small\bfseries},
@@ -107,7 +99,7 @@
     % =========================================================
     % PARTE ESQUERDA: ESTRUTURA DO GRAFO K_n
     % =========================================================
-    \node[font=\bfseries\large] at (0, 4.3) {1. Partição das Arestas em $K_n$};
+    \node[font=\bfseries\normalsize] at (0, 4.3) {1. Partição das Arestas em $K_n$};
 
     % Elipse do grafo K_n
     \draw[fill=gray!5, draw=gray!50, thick, rounded corners=20pt] (-3.8, -2.5) rectangle (3.8, 3.5);
@@ -150,7 +142,7 @@
     % =========================================================
     % PARTE DIREITA: CONTAGEM MULTIPLICATIVA (VETOR DE ARESTAS)
     % =========================================================
-    \node[font=\bfseries\large] at (9.2, 4.3) {2. Contagem de Colorações com $S$ Monocromático};
+    \node[font=\bfseries\normalsize] at (9.2, 4.3) {2. Contagem de Colorações com $S$ Monocromático};
 
     % Bloco Travado (internas a S)
     \node[boxS] (e1) at (5.8, 1.8) {$e_1$};
@@ -194,6 +186,56 @@
     };
 
 \end{tikzpicture}
+
+\begin{enumerate}
+    \item \textbf{Etapa 1 --- Definição do Espaço Amostral e Estrutura das Colorações:}
+    \begin{itemize}
+        \item Considere o grafo completo $K_n$, o qual possui exatamente $\binom{n}{2}$ arestas.
+        \item Atribuímos independentemente uma de duas cores (vermelho ou azul) a cada aresta, resultando em um total de $2^{\binom{n}{2}}$ colorações distintas para $E(K_n)$.
+        \item Chamamos uma coloração de \textbf{ruim} se ela contiver ao menos uma $k$-clique ($K_k$) monocromática, e de \textbf{boa} caso contrário.
+    \end{itemize}
+
+    \item \textbf{Etapa 2 --- Contagem das Colorações Ruins via Cota da União:}
+    \begin{itemize}
+        \item Fixe um subconjunto específico $S \subseteq V(K_n)$ composto por $|S| = k$ vértices.
+        \item Para que $S$ seja monocromático: há $2$ escolhas para a cor de $S$ (tudo vermelho ou tudo azul), o que fixa as $\binom{k}{2}$ arestas internas a $S$, enquanto as demais $\binom{n}{2} - \binom{k}{2}$ arestas de $K_n$ permanecem livres, podendo ser coloridas de $2^{\binom{n}{2} - \binom{k}{2}}$ maneiras.
+        \item Assim, o número de colorações que tornam $S$ monocromático é $2 \cdot 2^{\binom{n}{2} - \binom{k}{2}} = 2^{\binom{n}{2} - \binom{k}{2} + 1}$.
+        \item Como existem $\binom{n}{k}$ subconjuntos de $k$ vértices em $K_n$, aplicamos o princípio multiplicativo:
+        \[ \#\{\text{ruins}\} \le \binom{n}{k} 2^{\binom{n}{2} - \binom{k}{2} + 1}. \]
+    \end{itemize}
+
+    \item \textbf{Etapa 3 --- Condição para Existência de uma Coloração Boa:}
+    \begin{itemize}
+        \item Se o número de colorações ruins for estritamente menor que o total $2^{\binom{n}{2}}$, garante-se que pelo menos uma coloração boa sobra:
+        \[ \#\{\text{ruins}\} \le \binom{n}{k} 2^{\binom{n}{2} - \binom{k}{2} + 1} < 2^{\binom{n}{2}}. \]
+        \item Dividindo ambos os lados por $2^{\binom{n}{2}}$, obtemos a desigualdade equivalente:
+        \[ \binom{n}{k} 2^{1 - \binom{k}{2}} < 1. \]
+    \end{itemize}
+
+    \item \textbf{Etapa 4 --- Aplicação da Cota de Stirling e Substituição de $n \le 2^{k/2}$:}
+    \begin{itemize}
+        \item Usando $\binom{n}{k} \le \frac{n^k}{k!}$ junto com $k! \ge (k/e)^k$, estimamos $\binom{n}{k} \le \left(\frac{en}{k}\right)^k$.
+        \item Supondo $n \le 2^{k/2}$, temos $n^k \le 2^{k^2/2}$ e, portanto, $\binom{n}{k} \le \left(\frac{e}{k}\right)^k 2^{k^2/2}$.
+        \item Multiplicando por $2^{1 - \binom{k}{2}} = 2^{1 - \frac{k^2}{2} + \frac{k}{2}}$ e somando os expoentes de base $2$ (onde $\frac{k^2}{2}$ se cancela), obtemos:
+        \[ \binom{n}{k} 2^{1 - \binom{k}{2}} \le \left(\frac{e}{k}\right)^k 2^{\frac{k^2}{2}} \cdot 2^{1 - \frac{k^2}{2} + \frac{k}{2}} = \left(\frac{e}{k}\right)^k 2^{1 + k/2} = 2\left(\frac{e\sqrt{2}}{k}\right)^k. \]
+    \end{itemize}
+
+    \item \textbf{Etapa 5 --- Análise Numérica e Limiar $k \ge 5$:}
+    \begin{itemize}
+        \item Como $e\sqrt{2} \approx 3{,}844 < k$ para todo $k \ge 4$, a base $\frac{e\sqrt{2}}{k}$ é menor que $1$ e a expressão $g(k) = 2\left(\frac{e\sqrt{2}}{k}\right)^k$ é estritamente decrescente em $k$ para $k \ge 4$.
+        \item Para $k = 4$, a expressão vale $\approx 1{,}706 > 1$ (a cota falha). Porém, para $k = 5$, temos:
+        \[ 2\left(\frac{e\sqrt{2}}{5}\right)^5 \approx 2 \cdot (0{,}7688)^5 \approx 0{,}537 < 1. \]
+        \item Pela monotonicidade decrescente, conclui-se que $2\left(\frac{e\sqrt{2}}{k}\right)^k < 1$ para todo $k \ge 5$.
+    \end{itemize}
+
+    \item \textbf{Etapa 6 --- Escolha de $n = \lfloor 2^{k/2} \rfloor$ e Conclusão sobre $R(k)$:}
+    \begin{itemize}
+        \item \textbf{Garantia de $n \le 2^{k/2}$ e $n \ge k$:} Como o número de vértices deve ser inteiro, definimos $n := \lfloor 2^{k/2} \rfloor$. Pela definição da função piso ($\lfloor x \rfloor \le x < \lfloor x \rfloor + 1$), temos imediatamente $n \le 2^{k/2}$. Além disso, para $k = 5$, temos $2^{5/2} = 4\sqrt{2} \approx 5{,}656 \implies n = \lfloor 5{,}656 \rfloor = 5 \ge 5$; como $2^{k/2}$ cresce exponencialmente, segue que $n = \lfloor 2^{k/2} \rfloor \ge k$ para todo $k \ge 5$, garantindo que $K_n$ possui ao menos $k$ vértices.
+        \item \textbf{Existência da Coloração Boa em $K_n$:} Como $n = \lfloor 2^{k/2} \rfloor$ satisfaz $n \le 2^{k/2}$, as Etapas 4 e 5 asseguram que $\binom{n}{k} 2^{1 - \binom{k}{2}} < 1$ para todo $k \ge 5$. Multiplicando por $2^{\binom{n}{2}}$, temos $\#\{\text{ruins}\} < 2^{\binom{n}{2}}$, donde $\#\{\text{boas}\} = 2^{\binom{n}{2}} - \#\{\text{ruins}\} \ge 1$. Logo, existe pelo menos uma $2$-coloração das arestas de $K_n$ sem nenhuma clique monocromática de tamanho $k$ ($K_n \not\to K_k$), e restringir essa coloração a qualquer $m \le n$ também evita $K_k$ monocromático.
+        \item \textbf{Cota Final para $R(k)$:} Sendo $R(k)$ o menor inteiro $N$ tal que toda $2$-coloração de $K_N$ contém um $K_k$ monocromático, o fato de $K_n$ admitir uma coloração boa implica que $R(k) > n = \lfloor 2^{k/2} \rfloor$. Como $R(k)$ é um número inteiro, ele deve ser pelo menos $n + 1$:
+        \[ R(k) \ge \lfloor 2^{k/2} \rfloor + 1 > 2^{k/2} \quad \text{para todo } k \ge 5. \]
+    \end{itemize}
+\end{enumerate}
 
 % EXERCÍCIO 3
 \subsection*{Exercício 3: Teorema de Kővári-Sós-Turán}
