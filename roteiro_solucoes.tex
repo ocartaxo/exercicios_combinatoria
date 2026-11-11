@@ -7,6 +7,7 @@
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{tikz}
 \usepackage{booktabs}
+\usepackage{microtype}
 
 % \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
@@ -339,7 +340,7 @@
 \end{tikzpicture}
 \end{center}
 
-\textbf{Parte I --- Passo a Passo da Análise Local na Vizinhança de $u$:}
+\subsubsection{Parte I --- Passo a Passo da Análise Local na Vizinhança de $u$:}
 \begin{enumerate}
     \item \textbf{Contagem de Triângulos via Vizinhanças:} Seja $T(G)$ o número de triângulos em $G$. Toda aresta interna à vizinhança de um vértice $u$ forma um triângulo com $u$. Como cada triângulo possui três vértices, somar as arestas internas às vizinhanças de todos os vértices resulta em exatamente $3T(G)$.
     \item \textbf{Bipartição Natural centrada em $u$:} Para cada $u \in V(G)$, defina a partição $B_u = N(u)$ e $A_u = V(G) \setminus N(u)$, com cardinalidades $|B_u| = d(u)$ e $|A_u| = n - d(u)$. As arestas de $G$ dividem-se em três conjuntos disjuntos:
@@ -352,7 +353,7 @@
     \[ \sum_{v \in A_u} d(v) \ge e(G) + \big(t - e(B_u)\big) - e(B_u) = e(G) + t - 2e(B_u) \implies 2e(B_u) \ge e(G) + t - \sum_{v \in A_u} d(v). \]
 \end{enumerate}
 
-\textbf{Parte II --- Passo a Passo da Agregação Global e Dupla Contagem:}
+\subsubsection{Parte II --- Passo a Passo da Agregação Global e Dupla Contagem:}
 \begin{enumerate}[resume]
     \item \textbf{Somatório Global sobre $u \in V(G)$:} Somando a desigualdade local para todos os $n$ vértices $u \in V(G)$, estabelecemos a inequação global:
     \[ 2\sum_{u \in V(G)} e(B_u) \ge n\big(e(G) + t\big) - \sum_{u \in V(G)} \sum_{v \in A_u} d(v). \]
@@ -378,36 +379,57 @@
 \textbf{Intuição Estrutural:} O caminho $P_k$ possui comprimento $k$, logo contém $k+1$ vértices. A prova divide-se em duas frentes: (I) uma construção em blocos para o limite inferior que confina caminhos vermelhos à maior clique e força caminhos azuis a alternarem em um subgrafo bipartido; e (II) uma prova por contradição para o limite superior baseada no \textit{Lema de Cobertura de Caminhos}, onde maximizamos o caminho vermelho $R$ para forçar uma alta densidade de arestas azuis entre as extremidades do caminho azul $B$ e o interior de $R$.
 
 \begin{center}
-\begin{tikzpicture}[scale=0.9, every node/.style={circle, draw, minimum size=6.5mm, inner sep=1pt}]
-    % Caminho Azul B
-    \node[draw=blue!80!black, thick] (u1) at (0, 2.2) {$u_1$};
-    \node[draw=blue!80!black, thick] (u2) at (1.8, 2.2) {$u_2$};
-    \node[draw=none] (udots) at (3.6, 2.2) {$\dots$};
-    \node[draw=blue!80!black, thick] (ub) at (5.4, 2.2) {$u_b$};
-    \node[draw=none, anchor=west] at (6.2, 2.2) {\small Caminho Azul $B$ ($b$ vértices)};
+\begin{tikzpicture}[
+    vertex/.style={circle, draw=black, fill=black, inner sep=2pt},
+    blue edge/.style={blue, very thick},
+    set label/.style={font=\Large\bfseries}
+]
 
-    % Caminho Vermelho R (maximal)
-    \node[draw=red!80!black, thick] (v1) at (0, 0) {$v_1$};
-    \node[draw=red!80!black, thick] (v2) at (1.8, 0) {$v_2$};
-    \node[draw=red!80!black, thick] (v3) at (3.6, 0) {$v_3$};
-    \node[draw=none] (vdots) at (4.5, 0) {$\dots$};
-    \node[draw=red!80!black, thick] (vr) at (5.4, 0) {$v_r$};
-    \node[draw=none, anchor=west] at (6.2, 0) {\small Caminho Vermelho $R$ ($r$ maximal)};
+% Círculos vermelhos representando as arestas internas (os cliques monocromáticos)
+\draw[red, ultra thick, fill=red!5] (0,0) circle (2.8cm);
+\draw[red, ultra thick, fill=red!5] (7,0) circle (2cm);
 
-    % Arestas internas dos caminhos
-    \draw[very thick, blue] (u1) -- (u2) -- (udots) -- (ub);
-    \draw[very thick, red] (v1) -- (v2) -- (v3) -- (vdots) -- (vr);
+% Vértices do Conjunto A (alinhados na borda direita para facilitar a visão do zigue-zague)
+\node[vertex, label=left:{$a_1$}] (a1) at (1.5, 1.5) {};
+\node[vertex, label=left:{$a_2$}] (a2) at (1.5, 0.5) {};
+\node[vertex, label=left:{$a_3$}] (a3) at (1.5, -0.5) {};
+\node[vertex, label=left:{$a_4$}] (a4) at (1.5, -1.5) {};
+% Alguns vértices soltos para preencher visualmente o conjunto A
+\node[vertex] (a5) at (-1, 0) {}; 
+\node[vertex] (a6) at (0, 1.2) {};
+\node[vertex] (a7) at (-0.5, -1.5) {};
+\node[vertex] (a8) at (0, -0.2) {};
 
-    % Arestas de cruzamento forçadas a ser azuis pela maximalidade de R
-    \draw[thick, blue, dashed] (u1) -- (v1);
-    \draw[thick, blue, dashed] (u1) -- (v3);
-    \draw[thick, blue, dashed] (u1) -- (vr);
-    \draw[thick, blue, dashed] (ub) -- (v2);
-    \draw[thick, blue, dashed] (ub) -- (vr);
+% Vértices do Conjunto B (alinhados na borda esquerda)
+\node[vertex, label=right:{$b_1$}] (b1) at (5.5, 1) {};
+\node[vertex, label=right:{$b_2$}] (b2) at (5.5, 0) {};
+\node[vertex, label=right:{$b_3$}] (b3) at (5.5, -1) {};
+
+% Caminho Azul intercalando A e B (Zigue-zague)
+\draw[blue edge] (a1) -- (b1);
+\draw[blue edge] (b1) -- (a2);
+\draw[blue edge] (a2) -- (b2);
+\draw[blue edge] (b2) -- (a3);
+\draw[blue edge] (a3) -- (b3);
+\draw[blue edge] (b3) -- (a4);
+
+% Rótulos dos Conjuntos
+\node[set label, above] at (0, 3.2) {Conjunto $A$};
+\node[above] at (0, 2.8) {$|A| = k$};
+\node[red, font=\bfseries, align=center] at (0, -3.5) {};
+
+\node[set label, above] at (7, 2.5) {Conjunto $B$};
+\node[above] at (7, 1.9) {$|B| = \lfloor (k-1)/2 \rfloor$};
+\node[red, font=\bfseries, align=center] at (7, -2.7) {};
+
+% Rótulo explicativo do caminho azul
+\node[blue, font=\bfseries, fill=white, inner sep=4pt] at (3.5, 0) {};
+\node[blue, fill=white, inner sep=2pt] at (3.5, -0.5) {};
+
 \end{tikzpicture}
 \end{center}
 
-\textbf{Parte I --- Passo a Passo do Limite Inferior ($r(P_k) \ge \lceil 3k/2 \rceil$):}
+\subsubsection{Parte I --- Passo a Passo do Limite Inferior ($r(P_k) \ge \lceil 3k/2 \rceil$):}
 \begin{enumerate}
     \item \textbf{Partição Extremal ($N = \lceil 3k/2 \rceil - 1$):} Divida os $N$ vértices de $K_N$ em dois conjuntos disjuntos $A$ e $B$ tais que $|A| = k$ e $|B| = \lfloor (k-1)/2 \rfloor$. A soma resulta exatamente em $k + \lfloor (k-1)/2 \rfloor = \lceil 3k/2 \rceil - 1 = N$.
     \item \textbf{Coloração em Blocos:} Pinte todas as arestas internas a $A$ e internas a $B$ de vermelho (duas cliques vermelhas disjuntas) e todas as arestas entre $A$ e $B$ de azul (um grafo bipartido completo azul).
@@ -415,7 +437,78 @@
     \item \textbf{Alternância Azul:} Como o subgrafo azul é bipartido entre $A$ e $B$, todo caminho azul alterna estritamente entre os dois conjuntos. Sendo $B$ o menor conjunto, o caminho azul visita no máximo os $|B|$ vértices de $B$ e no máximo $|B| + 1$ vértices de $A$, totalizando no máximo $2|B| + 1 = 2\lfloor (k-1)/2 \rfloor + 1 \le k$ vértices. Logo, nenhum caminho monocromático atinge $k+1$ vértices.
 \end{enumerate}
 
-\textbf{Parte II --- Passo a Passo do Limite Superior ($r(P_k) \le \lceil 3k/2 \rceil$):}
+\newpage
+
+\textbf{O Lema de Cobertura de Caminhos (Gerencsér-Gyárfás):}
+
+Antes de atacar o limite superior, precisamos deste lema crucial: \textit{"Os vértices de qualquer grafo completo $K_N$ com arestas bicoloridas podem ser particionados em exatamente dois caminhos disjuntos de cores distintas."}
+\begin{quote}
+\small
+\textbf{Prova do Lema:} Seja $R = (r_1, \dots, r_a)$ um caminho vermelho e $B = (b_1, \dots, b_b)$ um caminho azul, disjuntos, que juntos cubram o \textit{maior número possível} de vértices. Suponha, por absurdo, que a cobertura não seja total e exista um vértice $x \notin R \cup B$.
+
+A aresta $x r_1$ não pode ser vermelha (caso contrário, poderíamos estender $R$ para $x \to r_1 \dots$, cobrindo $x$ e contradizendo a maximalidade da nossa escolha inicial). Logo, $x r_1$ é azul. Analogamente, a aresta $x b_1$ não pode ser azul (caso contrário, estenderíamos $B$ para $x \to b_1 \dots$), o que obriga $x b_1$ a ser vermelha.
+
+Agora, avalie a aresta conectora $r_1 b_1$ entre os caminhos originais:
+\begin{itemize}
+    \item \textbf{Se $r_1 b_1$ for vermelha:} O caminho $x \to u_1 \to v_1 \to v_2 \dots \to v_r$ é um novo caminho vermelho longo. O caminho azul restante é $B' = (b_2, \dots, b_b)$. Essa nova configuração é disjunta e cobre $a+b+1$ vértices, pois absorveu o vértice esquecido $x$, violando a suposição de maximalidade inicial.
+    \item \textbf{Se $r_1 b_1$ for azul:} O caminho $x \to v_1 \to u_1 \to u_2 \dots \to u_b$ é um novo caminho azul longo. O caminho vermelho restante é $R' = (v_2, \dots, v_r)$. Assim como no caso anterior, cobrimos todos os vértices e mais o $x$, gerando absurdo!
+\end{itemize}
+Como ambos os casos levam a contradições insolúveis, a hipótese de haver um vértice $x$ de fora é falsa. Fica provado que podemos sempre particionar o conjunto de vértices integralmente em exatamente dois caminhos de cores opostas. $\qed$
+\end{quote}
+\begin{center}
+    \begin{tikzpicture}[
+        % Definição dos estilos visuais para os nós e arestas
+        vertex/.style={circle, draw=black, thick, fill=white, inner sep=2pt, minimum size=8pt},
+        red edge/.style={red, line width=1.8pt},
+        blue edge/.style={blue, line width=1.8pt},
+        red dashed edge/.style={red, thick, dashed, line width=1.2pt},
+        blue dashed edge/.style={blue, thick, dashed, line width=1.2pt},
+        query edge/.style={black, thick, dotted, line width=1.2pt}
+    ]
+
+    % Nodos do caminho vermelho (R) na parte superior
+    \node[vertex, label=above:{\Large $v_1$}] (v1) at (3, 2) {};
+    \node[vertex, label=above:{\Large $v_2$}] (v2) at (5, 2) {};
+    \node at (7, 2) {\Large $\dots$}; % Elipse indicando continuação
+    \node[vertex, label=above:{\Large $v_r$}] (vr) at (9, 2) {};
+    
+    % Nodos do caminho azul (B) na parte inferior
+    \node[vertex, label=below:{\Large $u_1$}] (u1) at (3, -1) {};
+    \node[vertex, label=below:{\Large $u_2$}] (u2) at (5, -1) {};
+    \node at (7, -1) {\Large $\dots$}; % Elipse indicando continuação
+    \node[vertex, label=below:{\Large $u_b$}] (ub) at (9, -1) {};
+    
+    % Nodo isolado x, centralizado verticalmente à esquerda
+    \node[vertex, label=left:{\Large $x$}] (x) at (1, 0.5) {};
+    
+    % Arestas do caminho vermelho
+    \draw[red edge] (v1) -- (v2);
+    \draw[red edge] (v2) -- (6.5, 2);
+    \draw[red edge] (7.5, 2) -- (vr);
+    
+    % Arestas do caminho azul
+    \draw[blue edge] (u1) -- (u2);
+    \draw[blue edge] (u2) -- (6.5, -1);
+    \draw[blue edge] (7.5, -1) -- (ub);
+    
+    % Arestas tracejadas indicando as conexões forçadas por maximalidade
+    \draw[blue dashed edge] (x) -- (v1);
+    \draw[red dashed edge] (x) -- (u1);
+    
+    % Aresta pontilhada central (o ponto da contradição)
+    \draw[query edge] (v1) -- node[right=2pt] {\Large ?} (u1);
+    
+    % Rótulos de texto dos caminhos
+    \node[above] at (6, 2.6) {\large $R$ (Caminho Vermelho)};
+    \node[below] at (6, -1.6) {\large $B$ (Caminho Azul)};
+    
+    \end{tikzpicture}
+\end{center}
+
+
+\newpage
+
+\subsubsection{Parte II --- Passo a Passo do Limite Superior ($r(P_k) \le \lceil 3k/2 \rceil$):}
 \begin{enumerate}[resume]
     \item \textbf{Hipótese por Absurdo e Lema de Cobertura:} Tome $N = \lceil 3k/2 \rceil$ e suponha que exista uma 2-coloração de $K_N$ sem $P_k$ monocromático (sem caminhos de $k+1$ vértices). Pelo Lema de Gerencsér-Gyárfás, $V(K_N)$ pode ser particionado em um caminho vermelho $R = (v_1, \dots, v_r)$ e um caminho azul $B = (u_1, \dots, u_b)$ disjuntos, com $r + b = N$.
     \item \textbf{Escolha Maximal e Cota para $B$:} Escolha a partição que \textit{maximiza} o tamanho $r$ do caminho vermelho $R$. Pela hipótese de absurdo, $r \le k$ e $b \le k$. Disso decorre o limite inferior para o tamanho de $B$:
@@ -430,18 +523,13 @@
     Isso força um caminho azul de tamanho $k+1$, contradizendo a premissa inicial e provando que $r(P_k) = \lceil 3k/2 \rceil$.
 \end{enumerate}
 
-\textbf{Passo a Passo Rigoroso:}
-\begin{enumerate}
-    \item \textbf{Limite Inferior:} Construção explícita de dois componentes (tamanhos $k$ e $\lfloor (k-1)/2 \rfloor$). O caminho vermelho restringe-se ao maior bloco, e o azul precisa oscilar entre os dois. Nenhum alcança $k+1$.
-    \item \textbf{Limite Superior:} Considere a partição maximal para o caminho vermelho $R$. Pela maximalidade, a aresta do último vértice de $R$ para o primeiro de $B$ ($u_1$) \textit{tem} que ser azul, caso contrário $R$ cresceria.
-    \item O vértice azul da ponta enraíza-se maciçamente nas adjacências de $R$, permitindo que o caminho azul "pule" para dentro do caminho vermelho, usando os vértices vermelhos como "pontes" azuis, somando vértices e garantindo tamanho $> k$.
-\end{enumerate}
-
 % EXERCÍCIOS 8 E 9
 \subsection*{Exercício 8 e 9: Independência de Variáveis Aleatórias}
 \textbf{Ex 8 (Contraexemplo):} Independência dois a dois não garante independência mútua. O clássico lançamento de duas moedas com eventos $A$ (moeda 1 coroa), $B$ (moeda 2 coroa), $C$ (mesmo resultado). $P(A \cap B \cap C) = 1/4 \ne P(A)P(B)P(C) = 1/8$.
 
 \textbf{Ex 9 (Produto de VA Independentes):} Demonstração direta via Fubini e fatoração da densidade conjunta. A independência quebra a integral dupla $\iint xy f(x,y) dx dy$ em duas integrais marginais cujo produto é exatamente $\mathbb{E}[X_1]\mathbb{E}[X_2]$.
+
+\newpage
 
 % EXERCÍCIO 10
 \subsection*{Exercício 10: Limite do Número de Independência por Probabilidade}
@@ -472,11 +560,42 @@
     \item Como $\alpha(G) \ge |A|$ em \textit{qualquer} realização, ele supera a média: $\alpha(G) \ge \mathbb{E}[|A|] = \sum \frac{1}{d(v)+1}$.
 \end{enumerate}
 
-% EXERCÍCIO 11 E 12
-\subsection*{Exercício 11 e 12: Jensen e Supersaturação}
-\textbf{Ex 11 (Jensen):} Um princípio geométrico simples: uma função convexa está sempre acima da sua reta tangente. Expandindo Taylor até o termo linear na esperança $x_0 = \mathbb{E}[X]$, a linearidade anula o termo de primeiro grau, restando a prova.
+% EXERCÍCIO 11
+\subsection*{Exercício 11: Desigualdade de Jensen}
+\textbf{Intuição Geométrica e Probabilística:} A Desigualdade de Jensen formaliza que a média de uma função convexa é maior ou igual à função aplicada na média. Geometricamente, uma função convexa "faz uma curva para cima", o que significa que qualquer reta tangente traçada em um ponto de seu gráfico ficará inteiramente abaixo da função. Ao escolhermos o ponto de tangência exatamente no valor esperado da variável $\mathbb{E}[X]$, a linearidade da esperança anula a inclinação da reta, provando o resultado.
 
-\textbf{Ex 12 (Supersaturação Fraca):} Estratégia de remoção de arestas. Se houvesse menos que $ex(n, H)$ cópias, poderíamos destruir todas removendo uma aresta por cópia. O grafo restante teria $\ge 2 \cdot ex(n, H) - k$ arestas. Para quebrar a restrição extremal $e(G') \le ex(n, H)$, a álgebra isola e prova a contradição direta.
+\textbf{Passo a Passo da Demonstração (Desigualdade de Jensen):}
+\begin{enumerate}
+    \item \textbf{Ponto de Tangência e Aproximação de Taylor:} Seja $x_0 = \mathbb{E}[X]$ o ponto onde avaliaremos a função. Assumindo (para simplificação didática) que $f$ é duas vezes diferenciável, a fórmula de Taylor com resto de Lagrange garante que para qualquer $x \in \mathbb{R}$, existe um $\xi$ entre $x$ e $x_0$ tal que:
+    \[ f(x) = f(x_0) + f'(x_0)(x - x_0) + f''(\xi)\frac{(x-x_0)^2}{2}. \]
+    \item \textbf{Limitante Inferior via Convexidade:} Como a função $f$ é convexa, sua segunda derivada é não negativa ($f''(\xi) \ge 0$). Isso implica que o termo de erro na expansão de Taylor é positivo ou nulo. Ao removê-lo, obtemos a equação da reta tangente $L(x) := f(x_0) + f'(x_0)(x - x_0)$, que atua como um limite inferior global:
+    \[ f(x) \ge L(x) \quad \text{para todo } x \in \mathbb{R}. \]
+    \textit{Nota:} Se $f$ não for duas vezes diferenciável, a convexidade por si só garante a existência de uma reta suporte (subderivada) que cumpre exatamente essa mesma propriedade.
+    \item \textbf{Aplicação da Variável Aleatória e Monotonicidade:} Substituindo a variável real $x$ pela variável aleatória $X$, a desigualdade se mantém evento a evento: $f(X) \ge L(X)$. Aplicando a esperança matemática em ambos os lados (uma operação que preserva desigualdades), obtemos:
+    \[ \mathbb{E}[f(X)] \ge \mathbb{E}[L(X)]. \]
+    \item \textbf{Linearidade e Cancelamento Mágico:} Como a função $L(X)$ é afim (linear), aplicamos a linearidade da esperança no lado direito:
+    \[ \mathbb{E}[L(X)] = f(x_0) + f'(x_0)\big(\mathbb{E}[X] - x_0\big). \]
+    Pela nossa escolha inicial no Passo 1, temos $x_0 = \mathbb{E}[X]$. Logo, a diferença $\big(\mathbb{E}[X] - x_0\big)$ é exatamente zero, o que anula o termo da derivada.
+    \item \textbf{Conclusão:} O cálculo do lado direito colapsa simplesmente para $f(x_0)$. Substituindo $x_0$ de volta por $\mathbb{E}[X]$, concluímos a prova:
+    \[ \mathbb{E}[f(X)] \ge f(\mathbb{E}[X]). \]
+\end{enumerate}
+
+% EXERCÍCIO 12
+\subsection*{Exercício 12: Supersaturação}
+\textbf{Intuição Estrutural e Algébrica:} A supersaturação fraca garante que, se ultrapassarmos significativamente o limite extremal de um subgrafo $H$ (neste caso, o dobro de arestas), não apenas uma, mas \textit{muitas} cópias de $H$ devem aparecer inevitavelmente. A prova usa um argumento construtivo de remoção por absurdo: se houvessem "poucas" cópias, poderíamos removê-las tirando pouquíssimas arestas, resultando em um grafo $H$-livre que ainda teria "arestas demais" (violando a própria definição fundamental do número extremal).
+
+\textbf{Passo a Passo da Demonstração (Supersaturação Fraca):}
+\begin{enumerate}
+    \item \textbf{Hipótese por Absurdo:} Considere um grafo $G$ com $n$ vértices e número de arestas $e(G) \ge 2 \cdot ex(n, H)$. Suponha, por contradição, que $G$ contenha um número $k$ de cópias de $H$ estritamente menor que $ex(n, H)$, isto é, $k < ex(n, H)$.
+    \item \textbf{Destruição das Cópias (Remoção Estratégica):} Para transformar $G$ em um grafo totalmente livre de $H$, basta remover ao menos uma aresta de cada uma das $k$ cópias existentes. O número máximo de arestas que precisaremos remover para limpar o grafo é exatamente $k$ (o pior cenário, onde as cópias são totalmente disjuntas em relação às suas arestas).
+    \item \textbf{Construção e Limite Inferior de $G'$:} Seja $G'$ o grafo resultante após remover essas $k$ (ou menos) arestas. O número de arestas restantes em $G'$ obedece necessariamente ao seguinte limite inferior: 
+    \[ e(G') \ge e(G) - k. \]
+    \item \textbf{Definição Extremal (Limite Superior):} Por construção, $G'$ é um grafo $H$-livre com $n$ vértices. Pela definição clássica de número extremal, qualquer grafo com essas propriedades pode ter, no máximo, $ex(n, H)$ arestas. Logo, aplica-se o limite superior ao novo grafo: 
+    \[ e(G') \le ex(n, H). \]
+    \item \textbf{Contradição Algébrica:} Juntando o limite inferior e o limite superior de $e(G')$, deduzimos que $e(G) - k \le ex(n, H)$. Substituindo a premissa inicial $e(G) \ge 2 \cdot ex(n, H)$ na inequação, obtemos:
+    \[ 2 \cdot ex(n, H) - k \le ex(n, H). \]
+    Isolando a variável $k$ algebricamente, chegamos a $ex(n, H) \le k$, o que contradiz diretamente a nossa suposição inicial de que $k < ex(n, H)$. Como a suposição leva a um absurdo lógico, o grafo $G$ deve conter pelo menos $ex(n, H)$ cópias de $H$.
+\end{enumerate}
 
 % EXERCÍCIO 13
 \subsection*{Exercício 13: Teorema de Turán via Probabilidade}
@@ -489,15 +608,39 @@
     \item Usa-se Cauchy-Schwarz no somatório com os termos $(n-d(v))$. O somatório cruzado gera $(n^2 - 2e(G))$. Isola-se o termo de arestas, recuperando exatamente o limitante clássico da densidade de Turán.
 \end{enumerate}
 
-% EXERCÍCIO 14 E 15
-\subsection*{Exercício 14 e 15: Grafos Aleatórios (Acoplamento e Thresholds)}
-\textbf{Ex 14 (Monotonia):} Argumento de \textit{Coupling}. Usa-se uma variável uniforme $U_e \in [0,1]$ para cada aresta e modela-se $G_p$ incluindo as arestas onde $U_e \le p$. Como $p < p'$ implica $G_p \subseteq G_{p'}$, qualquer propriedade crescente conservada em subgrafos tem probabilidade monotonamente crescente em $p$.
+% EXERCÍCIO 14
+\subsection{Exercício 14: Grafos Aleatórios (Monotonicidade e Acoplamento)}
+\textbf{Intuição Probabilística:} Para provar que a probabilidade de $G(n,p)$ possuir uma propriedade crescente aumenta junto com $p$, utilizamos a técnica de \textit{Acoplamento (Coupling)}. Em vez de gerar os grafos $G(n,p)$ e $G(n,p')$ em universos isolados, geramos ambos simultaneamente no mesmo espaço de probabilidade usando variáveis uniformes. Isso cria uma dependência estrutural direta onde o grafo com menor probabilidade torna-se um subgrafo explícito do grafo com maior probabilidade.
+
+\textbf{Passo a Passo Rigoroso:}
+
+\subsubsection{Parte I --- Construção do Espaço de Probabilidade Acoplado:}
+\begin{enumerate}
+    \item \textbf{Definição do Objetivo:} Seja $\mathcal{A}$ uma família crescente de grafos. Queremos mostrar que para quaisquer probabilidades $p, p'$ tais que $0 \le p \le p' \le 1$, a função $f(p) = \mathbb{P}(G(n,p) \in \mathcal{A})$ obedece $f(p) \le f(p')$.
+    \item \textbf{Variáveis Uniformes Independentes:} Considere o grafo completo $K_n$, que possui $N = \binom{n}{2}$ arestas. Para cada aresta $e \in E(K_n)$, associe uma variável aleatória independente $U_e \sim \text{Uniforme}[0, 1]$.
+    \item \textbf{Geração Simulada de $G_p$:} Para um dado limiar $p \in [0,1]$, defina o grafo aleatório $G_p$ selecionando apenas as arestas cujo valor sorteado não excede $p$: 
+    \[ G_p := \{e \in E(K_n) : U_e \le p\}. \]
+    \item \textbf{Validação da Distribuição:} Como a variável $U_e$ é uniforme no intervalo $[0,1]$, a probabilidade de uma aresta existir em $G_p$ é exatamente $\mathbb{P}(U_e \le p) = p$. Além disso, as arestas são independentes. Logo, $G_p$ possui exatamente a mesma distribuição do modelo de Erdős-Rényi $G(n,p)$, o que implica que $f(p) = \mathbb{P}(G_p \in \mathcal{A})$.
+\end{enumerate}
+
+\subsubsection{Parte II --- Monotonicidade Estrutural e Inclusão de Eventos:}
+\begin{enumerate}[resume]
+    \item \textbf{Inclusão de Subgrafos ($G_p \subseteq G_{p'}$):} Considere agora $p \le p'$. Para qualquer realização das variáveis aleatórias $U_e$, se uma aresta $e$ pertence a $G_p$, então $U_e \le p$. Como $p \le p'$, transitivamente temos $U_e \le p'$, o que significa que a aresta $e$ obrigatoriamente também pertence a $G_{p'}$. Portanto, $G_p \subseteq G_{p'}$ para todo evento do espaço amostral.
+    \item \textbf{Aplicação da Propriedade Crescente:} A família $\mathcal{A}$ é, por definição, fechada para a adição de arestas. Isso significa que, se um grafo possui a propriedade e adicionamos arestas a ele, o novo grafo continua possuindo a propriedade. Logo, como $G_p \subseteq G_{p'}$, a implicação lógica $G_p \in \mathcal{A} \implies G_{p'} \in \mathcal{A}$ é sempre verdadeira.
+    \item \textbf{Inclusão de Eventos:} A implicação determinística acima traduz-se na linguagem de Teoria da Medida como uma inclusão de conjuntos (eventos) no espaço amostral: 
+    \[ \{G_p \in \mathcal{A}\} \subseteq \{G_{p'} \in \mathcal{A}\}. \]
+    \item \textbf{Cálculo da Probabilidade e Conclusão:} Pela propriedade fundamental da monotonicidade das medidas de probabilidade (se $X \subseteq Y$, então $\mathbb{P}(X) \le \mathbb{P}(Y)$), aplicamos a probabilidade em ambos os lados da inclusão de eventos:
+    \[ f(p) = \mathbb{P}(G_p \in \mathcal{A}) \le \mathbb{P}(G_{p'} \in \mathcal{A}) = f(p'). \]
+    Como $0 \le p \le p' \le 1 \implies f(p) \le f(p')$, concluímos que a função $f(p)$ é monótona não decrescente (crescente no sentido amplo).
+\end{enumerate}
+
+
 
 \subsection*{Exercício 15: Grafos Aleatórios (Threshold de Grau Minímo)}
 
 \textbf{Intuição Probabilística:} O problema analisa a evolução do grau mínimo de um grafo aleatório $G(n,p)$. A variável chave é $X$, o número de vértices com grau "proibido" (menor que $d$). A demonstração explora a transição de fase dessa variável: se a esperança $\mathbb{E}[X]$ tende a zero, usamos o Método do Primeiro Momento (Markov) para provar que $X=0$ com alta probabilidade; se a esperança tende ao infinito, usamos o Método do Segundo Momento (Chebyshev e variância) para provar que $X > 0$ com alta probabilidade.
 
-    \textbf{Passo a Passo Rigoroso:}
+\textbf{Passo a Passo Rigoroso:}
 \begin{enumerate}
     \item \textbf{O Valor Esperado ($\mathbb{E}[X_k]$) via Variáveis Indicadoras:} 
     A variável $X_k$ representa o número total de vértices no grafo que possuem grau exatamente igual a $k$. Para calcular sua esperança, não buscamos o grau médio de um vértice (que seria $\mathbb{E}[d_G(v)] = (n-1)p$), mas sim "quantos vértices esperamos encontrar com grau $k$".
@@ -510,14 +653,50 @@
     \end{itemize}
     
     \item \textbf{Aproximação Assintótica e Dominação do Termo $X_{d-1}$:} 
-    Substituindo o limiar $p = \frac{\log n + (d-1)\log\log n \pm \omega(n)}{n}$ e assumindo $p = o(1)$, as aproximações padrão $\binom{n-1}{k} \sim \frac{n^k}{k!}$ e $(1-p)^{n-1-k} \sim e^{-np}$ simplificam a expressão. Os termos onde $k < d-1$ tendem a zero mais rapidamente. O número total esperado de vértices com grau $< d$ é dominado pelo maior grau proibido, $X_{d-1}$, resultando na forma final:
-    \[ \mathbb{E}[X] \sim \frac{1}{(d-1)!}e^{\mp\omega(n)}. \]
+     Para lidar com o comportamento do grafo quando $n \to \infty$, analisamos e simplificamos os componentes de $\mathbb{E}[X_k]$ separadamente:
+    \begin{itemize}
+        \item limiar crítico fornecido pelo teorema é $p = \frac{\log n + (d-1)\log\log n \pm \omega(n)}{n}$. Como o denominador $n$ cresce de forma muito mais acelerada que o numerador (que é dominado pelo termo $\log n$), a probabilidade de uma aresta existir tende a zero quando $n \to \infty$. Matematicamente, denotamos essa tendência por $p = o(1)$.
+        
+        \item Sabendo que $p \to 0$ e que $k$ é uma constante, o termo combinatório simplifica-se para $\binom{n-1}{k} \sim \frac{n^k}{k!}$. Além disso, usando o limite notável da função exponencial, o termo de probabilidade para a não-existência de arestas aproxima-se por $(1-p)^{n-1-k} \sim e^{-np}$.
+        
+        \item O termo $e^{-np}$ é o principal responsável pelo decaimento probabilístico. Substituindo a expressão de $p$ diretamente no expoente, o fator $n$ se cancela:
+        \[ e^{-np} \sim \exp\big(-(\log n + (d-1)\log\log n \pm \omega(n))\big). \]
+        Usando as propriedades básicas de exponenciais e logaritmos ($e^{-a-b} = e^{-a}e^{-b}$ e $e^{-\log x} = \frac{1}{x}$), essa expressão colapsa nitidamente para:
+        \[ e^{-np} \sim \frac{1}{n} \cdot \frac{1}{(\log n)^{d-1}} \cdot e^{\mp\omega(n)}. \]
+        
+        \item Juntando a expansão acima com as aproximações iniciais (e notando que $p^k \sim \left(\frac{\log n}{n}\right)^k$), a esperança de encontrarmos um vértice de grau $k$ assume a forma \[\mathbb{E}[X_k] \sim \frac{(\log n)^{k-d+1}}{k!}e^{\mp\omega(n)} \quad .\] Observe o expoente do logaritmo ($k-d+1$): para qualquer grau $k < d-1$, esse expoente será negativo, forçando $\mathbb{E}[X_k]$ a tender rapidamente a zero. Portanto, a esperança total de vértices com grau "proibido" (grau $< d$), $\mathbb{E}[X] = \sum_{k=0}^{d-1} \mathbb{E}[X_k]$, é assintoticamente dominada pelo seu maior termo, $k = d-1$, onde o expoente logarítmico desaparece (fica elevado a zero). Isso nos entrega a forma final:
+        \[ \mathbb{E}[X] \sim \mathbb{E}[X_{d-1}] \sim \frac{1}{(d-1)!}e^{\mp\omega(n)}. \]
+    \end{itemize}
+
 
     \item \textbf{Método do Primeiro Momento ($p$ acima do limiar):} 
-    Para um $p$ grande (sinal $+\omega(n)$), temos $e^{-\omega(n)} \to 0$, resultando em $\mathbb{E}[X] \to 0$. Pela Desigualdade de Markov, a probabilidade do grafo possuir pelo menos um vértice de grau proibido é limitada por $\mathbb{P}(X \ge 1) \le \mathbb{E}[X] \to 0$. Pelo evento complementar, $\mathbb{P}(\delta(G) \ge d) \to 1$.
+     Para um $p$ grande (sinal $+\omega(n)$), temos $e^{-\omega(n)} \to 0$, resultando em $\mathbb{E}[X] \to 0$. Para transformar essa esperança nula em uma garantia probabilística, usamos a Desigualdade de Markov:
+    \begin{itemize}
+        \item Para qualquer variável aleatória não negativa $X$ e limite $a > 0$, Markov garante que $\mathbb{P}(X \ge a) \le \frac{\mathbb{E}[X]}{a}$. Nossa variável $X$ conta vértices, logo é não negativa. Queremos medir a chance de existir \textit{pelo menos um} vértice com grau proibido, então aplicamos $a = 1$.
+        \item \textit{O Limite Superior:} Substituindo na fórmula, a probabilidade do grafo falhar fica limitada pela sua própria média:
+        \[ \mathbb{P}(X \ge 1) \le \frac{\mathbb{E}[X]}{1} = \mathbb{E}[X]. \]
+        Como demonstramos que $\mathbb{E}[X] \to 0$, concluímos inevitavelmente que $\mathbb{P}(X \ge 1) \to 0$.
+        \item  O evento $\{X \ge 1\}$ significa "existe ao menos um vértice com grau menor que $d$". Seu evento complementar é $\{X = 0\}$, que significa "nenhum vértice tem grau menor que $d$". Se nenhum vértice tem grau menor que $d$, então todos os vértices têm grau maior ou igual a $d$. Essa é a definição exata de o grau mínimo do grafo ser $\delta(G) \ge d$.
+        \item A probabilidade do evento complementar é $1$ subtraído da probabilidade do evento original. Logo, o grau mínimo atinge o limiar esperado com probabilidade $1$:
+        \[ \mathbb{P}(\delta(G) \ge d) = \mathbb{P}(X = 0) = 1 - \mathbb{P}(X \ge 1) \to 1 - 0 = 1. \]
+    \end{itemize}
 
     \item \textbf{Método do Segundo Momento ($p$ abaixo do limiar):} 
-    Para um $p$ pequeno (sinal $-\omega(n)$), a esperança diverge: $\mathbb{E}[X] \to \infty$. Como os graus de vértices distintos são assintoticamente independentes (compartilham no máximo uma aresta), a razão dos momentos obedece $\frac{\mathbb{E}[X^2]}{\mathbb{E}[X]^2} \sim \frac{1}{\mathbb{E}[X]} + 1$. Aplicando a Desigualdade de Chebyshev, limitamos a falha via variância: $\mathbb{P}(X=0) \le \frac{1}{\mathbb{E}[X]} \to 0$, o que prova que $\mathbb{P}(\delta(G) \ge d) \to 0$.
+   Para um $p$ pequeno (sinal $-\omega(n)$), a esperança diverge: $\mathbb{E}[X] \to \infty$. Para provar que o grafo realmente possui vértices com grau proibido ($X > 0$), usamos o Método do Segundo Momento via Desigualdade de Chebyshev:
+    \begin{itemize}
+        \item \textit{A Desigualdade de Chebyshev:} Esta desigualdade limita a probabilidade de uma variável se afastar de sua média ($\mathbb{P}(|X - \mathbb{E}[X]| \ge t) \le \frac{\text{Var}(X)}{t^2}$). Queremos a probabilidade de o grafo falhar, ou seja, não ter nenhum vértice de grau menor que $d$ ($X = 0$). Se $X=0$, o afastamento em relação à média é exatamente $t = \mathbb{E}[X]$. Substituindo na fórmula, obtemos o limite clássico:
+        \[ \mathbb{P}(X = 0) \le \frac{\text{Var}(X)}{\mathbb{E}[X]^2}. \]
+        \item \textit{Transformando a Variância:} Pela definição matemática de variância, sabemos que $\text{Var}(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2$. Dividindo os dois termos por $\mathbb{E}[X]^2$, a nossa desigualdade se reescreve como:
+        \[ \mathbb{P}(X=0) \le \frac{\mathbb{E}[X^2]}{\mathbb{E}[X]^2} - 1. \]
+         O termo $\mathbb{E}[I_u I_v]$ é a probabilidade conjunta de os vértices $u$ e $v$ falharem simultaneamente. O grau de $u$ depende das suas $n-1$ arestas possíveis, e o de $v$ das dele. A \textit{única} aresta do universo que eles compartilham e que poderia "vincular" o destino dos dois é a aresta $\{u,v\}$. Num grafo gigantesco ($n \to \infty$), o impacto de uma única aresta é irrisório. Assim, os eventos comportam-se de forma quase independente: $\mathbb{E}[I_u I_v] \sim \mathbb{E}[I_u]\mathbb{E}[I_v]$.
+        \item \textit{A Razão Final:} Assumindo a independência, a soma dos pares cruzados se aproxima de $\mathbb{E}[X]^2$. Isso nos dá a relação direta:
+        \[ \mathbb{E}[X^2] \sim \mathbb{E}[X] + \mathbb{E}[X]^2. \]
+        Por fim, dividimos toda essa equação por $\mathbb{E}[X]^2$. O lado direito se divide em duas frações simples, revelando a aproximação procurada:
+        \[ \frac{\mathbb{E}[X^2]}{\mathbb{E}[X]^2} \sim \frac{\mathbb{E}[X]}{\mathbb{E}[X]^2} + \frac{\mathbb{E}[X]^2}{\mathbb{E}[X]^2} = \frac{1}{\mathbb{E}[X]} + 1. \]
+        \item \textit{Cancelamento Algébrico:} Substituindo essa convergência na nossa desigualdade de probabilidade, o termo $1$ se cancela perfeitamente com o $-1$ vindo da variância:
+        \[ \mathbb{P}(X=0) \le \left(\frac{1}{\mathbb{E}[X]} + 1\right) - 1 = \frac{1}{\mathbb{E}[X]}. \]
+        \item \textit{Conclusão do Limiar:} Como calculamos anteriormente que $\mathbb{E}[X] \to \infty$, a fração $\frac{1}{\mathbb{E}[X]}$ inevitavelmente tende a $0$. Assim, $\mathbb{P}(X = 0) \to 0$. Como o evento $\{X = 0\}$ equivale a dizer que o grau mínimo de todos os vértices é $\ge d$, fica provado que, abaixo do limiar, $\mathbb{P}(\delta(G) \ge d) \to 0$.
+    \end{itemize}
 \end{enumerate}
 
 
