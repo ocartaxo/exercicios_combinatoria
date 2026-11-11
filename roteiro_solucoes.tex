@@ -493,10 +493,32 @@
 \subsection*{Exercício 14 e 15: Grafos Aleatórios (Acoplamento e Thresholds)}
 \textbf{Ex 14 (Monotonia):} Argumento de \textit{Coupling}. Usa-se uma variável uniforme $U_e \in [0,1]$ para cada aresta e modela-se $G_p$ incluindo as arestas onde $U_e \le p$. Como $p < p'$ implica $G_p \subseteq G_{p'}$, qualquer propriedade crescente conservada em subgrafos tem probabilidade monotonamente crescente em $p$.
 
-\textbf{Ex 15 (Threshold de Grau Mínimo):} Utiliza os dois pilares do Método Probabilístico.
+\subsection*{Exercício 15: Grafos Aleatórios (Threshold de Grau Minímo)}
+
+\textbf{Intuição Probabilística:} O problema analisa a evolução do grau mínimo de um grafo aleatório $G(n,p)$. A variável chave é $X$, o número de vértices com grau "proibido" (menor que $d$). A demonstração explora a transição de fase dessa variável: se a esperança $\mathbb{E}[X]$ tende a zero, usamos o Método do Primeiro Momento (Markov) para provar que $X=0$ com alta probabilidade; se a esperança tende ao infinito, usamos o Método do Segundo Momento (Chebyshev e variância) para provar que $X > 0$ com alta probabilidade.
+
+    \textbf{Passo a Passo Rigoroso:}
 \begin{enumerate}
-    \item \textbf{Primeiro Momento (p acima do limiar):} A esperança de vértices com grau isolado cai a 0. Aplica-se Markov: $\mathbb{P}(X \ge 1) \le \mathbb{E}[X] \to 0$. O grafo com probabilidade tendendo a 1 atende à restrição de grau mínimo.
-    \item \textbf{Segundo Momento (p abaixo do limiar):} A esperança de vértices de baixo grau diverge ($\mathbb{E}[X] \to \infty$). É preciso Chebyshev para limitar a probabilidade de falha usando a variância. Como graus baixos são localmente independentes, $\mathbb{E}[X^2] / \mathbb{E}[X]^2 \to 1$, o que impulsiona a convergência da probabilidade de isolamento para 1.
+    \item \textbf{O Valor Esperado ($\mathbb{E}[X_k]$) via Variáveis Indicadoras:} 
+    A variável $X_k$ representa o número total de vértices no grafo que possuem grau exatamente igual a $k$. Para calcular sua esperança, não buscamos o grau médio de um vértice (que seria $\mathbb{E}[d_G(v)] = (n-1)p$), mas sim "quantos vértices esperamos encontrar com grau $k$".
+    \begin{itemize}
+        \item \textit{Probabilidade do evento exato:} Para que um vértice $v$ tenha grau $k$, ele precisa de exatamente $k$ sucessos em $n-1$ tentativas (arestas possíveis). A chance disso ocorrer é dada pela massa da distribuição binomial:
+        \[ \Pr(d_G(v) = k) = \binom{n-1}{k} p^k (1-p)^{n-1-k} \]
+        \item \textit{Linearidade da Esperança:} Definimos uma variável indicadora $I_v$ que vale $1$ se o vértice $v$ tem grau $k$, e $0$ caso contrário. O total de vértices com grau $k$ é a soma desses indicadores: $X_k = \sum_{v \in V} I_v$.
+        \item \textit{Soma global:} Como existem $n$ vértices com probabilidades idênticas, a soma dos valores esperados individuais é:
+        \[ \mathbb{E}[X_k] = \sum_{v \in V} \mathbb{E}[I_v] = \sum_{v \in V} \Pr(d_G(v) = k) = n \binom{n-1}{k} p^k (1-p)^{n-1-k} \]
+    \end{itemize}
+    
+    \item \textbf{Aproximação Assintótica e Dominação do Termo $X_{d-1}$:} 
+    Substituindo o limiar $p = \frac{\log n + (d-1)\log\log n \pm \omega(n)}{n}$ e assumindo $p = o(1)$, as aproximações padrão $\binom{n-1}{k} \sim \frac{n^k}{k!}$ e $(1-p)^{n-1-k} \sim e^{-np}$ simplificam a expressão. Os termos onde $k < d-1$ tendem a zero mais rapidamente. O número total esperado de vértices com grau $< d$ é dominado pelo maior grau proibido, $X_{d-1}$, resultando na forma final:
+    \[ \mathbb{E}[X] \sim \frac{1}{(d-1)!}e^{\mp\omega(n)}. \]
+
+    \item \textbf{Método do Primeiro Momento ($p$ acima do limiar):} 
+    Para um $p$ grande (sinal $+\omega(n)$), temos $e^{-\omega(n)} \to 0$, resultando em $\mathbb{E}[X] \to 0$. Pela Desigualdade de Markov, a probabilidade do grafo possuir pelo menos um vértice de grau proibido é limitada por $\mathbb{P}(X \ge 1) \le \mathbb{E}[X] \to 0$. Pelo evento complementar, $\mathbb{P}(\delta(G) \ge d) \to 1$.
+
+    \item \textbf{Método do Segundo Momento ($p$ abaixo do limiar):} 
+    Para um $p$ pequeno (sinal $-\omega(n)$), a esperança diverge: $\mathbb{E}[X] \to \infty$. Como os graus de vértices distintos são assintoticamente independentes (compartilham no máximo uma aresta), a razão dos momentos obedece $\frac{\mathbb{E}[X^2]}{\mathbb{E}[X]^2} \sim \frac{1}{\mathbb{E}[X]} + 1$. Aplicando a Desigualdade de Chebyshev, limitamos a falha via variância: $\mathbb{P}(X=0) \le \frac{1}{\mathbb{E}[X]} \to 0$, o que prova que $\mathbb{P}(\delta(G) \ge d) \to 0$.
 \end{enumerate}
+
 
 \end{document}
