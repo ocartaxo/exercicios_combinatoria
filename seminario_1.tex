@@ -128,31 +128,72 @@
     \end{block}
 \end{frame}
 
-\begin{frame}{Técnica B: Construção Extremal (O limite é ótimo?)}
-    \textbf{Mudança de jogo:} até aqui o jogo era Maker--Breaker; nesta técnica passamos ao \textbf{jogo simétrico}, também considerado no artigo. Os dois jogadores tentam completar um conjunto de $\mathcal{F}$, e vence quem o fizer \textbf{primeiro} (não há papéis de Maker e Breaker).
+% ==========================================
+% TÉCNICA B - DEFINIÇÃO E COTA INFERIOR
+% ==========================================
+\begin{frame}{Técnica B: Jogo Simétrico e Otimalidade do Critério}
+    \small
+    \textbf{Do Maker-Breaker ao Jogo Simétrico (\textit{Strong Game}):}
+    \begin{itemize}
+        \item O artigo original (1973) também considera o jogo em que ambos os jogadores têm o mesmo objetivo: \textbf{vence quem completar primeiro} algum conjunto $A \in \mathcal{F}$ (se ninguém completar, há empate).
+        \item Seja $m^*(r)$ o menor número de conjuntos de tamanho $r$ que permite ao \textbf{Primeiro Jogador} forçar a vitória.
+    \end{itemize}
 
-    Seja $m^*(r)$ o menor número de conjuntos de tamanho $r$ que permite ao \textbf{primeiro jogador} forçar a vitória no jogo simétrico.
-
-    \begin{block}{Teorema da Construção Extremal}
+    \begin{block}{Teorema da Construção Extremal (Erdős-Selfridge, 1973)}
         $$m^*(r) = 2^{r-1}$$
     \end{block}
-    \textbf{Cota inferior:} se $|\mathcal{F}| < 2^{r-1}$, então $\sum_{A \in \mathcal{F}} 2^{-|A|} < 1/2$. O segundo jogador pode apenas bloquear, com a estratégia gulosa da Técnica A; assim o primeiro jogador nunca completa um conjunto e não vence.
 
-    \textbf{Cota superior:} construímos uma família com $2^{r-1}$ conjuntos na qual o primeiro jogador vence, por \textbf{indução em $r$}.
+    \textbf{Cota Inferior ($m^*(r) \ge 2^{r-1}$) via Técnica A:}
+    \begin{itemize}
+        \item Se $|\mathcal{F}| < 2^{r-1}$ e $|A| = r$ para todo $A \in \mathcal{F}$, então $\sum_{A \in \mathcal{F}} 2^{-|A|} = |\mathcal{F}| \cdot 2^{-r} < 2^{r-1} \cdot 2^{-r} = \tfrac{1}{2}$.
+        \item Pela Técnica A, o 2º jogador bloqueia todos os conjuntos do 1º jogador (vencendo como \textit{Breaker} ou garantindo no mínimo o empate no jogo simétrico).
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{O Passo Indutivo da Construção Extremal}
-    \begin{block}{Como forçar a vitória do primeiro jogador (Indução)}
-        \begin{enumerate}
-            \item \textbf{Base:} Para $r=1$, um único conjunto $A=\{x\}$ garante vitória imediata ($2^0=1$).
-            \item \textbf{Passo Indutivo:} Assuma que podemos construir uma família $\mathcal{H}_{r-1}$ com $2^{r-2}$ conjuntos que dá vitória ao primeiro jogador.
-            \item Para criar $\mathcal{H}_r$, tome \textbf{duas cópias disjuntas} de $\mathcal{H}_{r-1}$ ($C_1$ e $C_2$).
-            \item Adicione um vértice central (raiz) $x_0$ a todos os conjuntos de $C_1$ e $C_2$. O total de conjuntos agora é $2^{r-2} + 2^{r-2} = 2^{r-1}$, todos de tamanho $r$.
-        \end{enumerate}
-    \end{block}
-    \textbf{Estratégia:} O primeiro jogador ocupa $x_0$. O segundo responde em $C_1$ ou em $C_2$ (nunca em ambos). O primeiro ignora essa cópia e passa a jogar como ``primeiro'' na cópia limpa, vencendo por indução.
+% ==========================================
+% TÉCNICA B - CONSTRUÇÃO INDUTIVA
+% ==========================================
+\begin{frame}{Cota Superior ($m^*(r) \le 2^{r-1}$): Construção de Erdős-Selfridge}
+    Para mostrar que $m^*(r) \le 2^{r-1}$, construímos por indução duas famílias gêmeas $G_r$ e $G'_r$, cada uma com $2^{r-1}$ conjuntos de tamanho $r$:
 
-    \textbf{Por que o segundo jogador não vence antes?} Todo conjunto contém $x_0$, que pertence ao primeiro jogador; logo o segundo nunca completa conjunto algum.
+    \begin{itemize}
+        \item \textbf{Base ($r=1$):} $G_1 = \{\{a_1\}\}$ e $G'_1 = \{\{b_1\}\}$ ($2^{1-1} = 1$ conjunto).
+        \item \textbf{Passo Indutivo ($r-1 \to r$):} Dados $G_{r-1}$ e $G'_{r-1}$ (cada uma com $2^{r-2}$ conjuntos), adicionamos dois novos elementos $a_r$ e $b_r$:
+        $$G_r = \{ A \cup \{a_r\} : A \in G_{r-1} \cup G'_{r-1} \}, \quad G'_r = \{ A \cup \{b_r\} : A \in G_{r-1} \cup G'_{r-1} \}$$
+    \end{itemize}
+
+    \begin{exampleblock}{Exemplos e Estrutura Explícita de $G_r$}
+        \begin{itemize}
+            \item $G_2 = \{\{a_1, a_2\}, \{b_1, a_2\}\}$ \quad ($2$ conjuntos de tamanho $2$)
+            \item $G_3 = \{\{a_1, a_2, a_3\}, \{b_1, a_2, a_3\}, \{a_1, b_2, a_3\}, \{b_1, b_2, a_3\}\}$ \quad ($4$ conjuntos de tamanho $3$)
+            \item \textbf{Regra geral:} Todo conjunto em $G_r$ contém o elemento fixo $\mathbf{a_r}$ mais \textbf{exatamente um elemento de cada par $\{a_i, b_i\}$} para $i \in \{1, \dots, r-1\}$.
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+% ==========================================
+% TÉCNICA B - ESTRATÉGIA VENCEDORA
+% ==========================================
+\begin{frame}{A Estratégia Vencedora (Emparelhamento) em $G_r$}
+    Como o Primeiro Jogador força a vitória jogando sobre a família $G_r$?
+
+    \begin{enumerate}
+        \item \textbf{1º Lance (O golpe duplo em $a_r$):} O 1º jogador escolhe imediatamente $\mathbf{a_r}$.
+        \begin{itemize}
+            \item \textit{Defesa total no Jogo Simétrico:} Como $a_r \in A$ para todo $A \in G_r$, o 2º jogador fica \textbf{instantaneamente impedido de vencer}!
+            \item \textit{Redução do ataque:} Resta ao 1º jogador conquistar um elemento de cada par $\{a_1, b_1\}, \dots, \{a_{r-1}, b_{r-1}\}$.
+        \end{itemize}
+        \vspace{0.2cm}
+        \item \textbf{Rodadas $2$ até $r$ (Estratégia de Espelhamento):}
+        \begin{itemize}
+            \item Os únicos elementos restantes em $G_r$ são os $r-1$ pares disjuntos $\{a_i, b_i\}$.
+            \item Sempre que o 2º jogador escolhe $a_i$ (bloqueando metade dos conjuntos ativos), o 1º jogador responde imediatamente escolhendo $b_i$ (e vice-versa).
+        \end{itemize}
+    \end{enumerate}
+
+    \begin{alertblock}{Conclusão da Prova}
+        No $r$-ésimo lance, o 1º jogador possui $a_r$ e um elemento $c_i \in \{a_i, b_i\}$ de cada par, completando $\{c_1, \dots, c_{r-1}, a_r\} \in G_r$ e vencendo tanto no Jogo Simétrico quanto no Maker-Breaker!
+    \end{alertblock}
 \end{frame}
 
 \begin{frame}{Técnica C: Aplicação à Família de Cliques}
