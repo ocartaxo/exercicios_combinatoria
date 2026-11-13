@@ -12,5 +12,7 @@
 *.toc
 *.lof
 *.lot
+*.nav
+*.snm
 *.pdf
 .vscode/
