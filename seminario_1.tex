@@ -1,0 +1,201 @@
+% --- UNIVERSAL PREAMBLE BLOCK FOR BEAMER ---
+\documentclass[11pt, aspectratio=169]{beamer}
+\usepackage{fontspec}
+
+\usepackage[portuguese, bidi=basic, provide=*]{babel}
+
+\babelprovide[import, onchar=ids fonts]{portuguese}
+\babelprovide[import, onchar=ids fonts]{english}
+
+% Beamer uses sans-serif fonts by default, so we set Noto Sans for both rm and sf
+\babelfont{rm}{Noto Sans}
+\babelfont{sf}{Noto Sans}
+
+% Theme selection
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+% Standard math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+% Title information
+\title[Método do Potencial]{Seminário 1: Método do Potencial em Jogos Posicionais}
+\subtitle{Análise de Erdős e Selfridge (1973)}
+\author{Equipe 1}
+\institute{Combinatória Extremal e Probabilística}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Objetivos do Seminário}
+    \begin{itemize}
+        \item \textbf{Compreender a dinâmica} de um jogo posicional do tipo Maker-Breaker.
+        \item \textbf{Apresentar a Técnica do Potencial:} Como uma função matemática pode substituir a análise exaustiva da árvore de jogadas.
+        \item \textbf{Demonstrar o Critério de Erdős-Selfridge:} Um teorema clássico e global que garante a vitória/empate do jogador defensivo.
+        \item \textbf{Discutir a Otimalidade:} Analisar a construção extremal exata para o caso uniforme.
+        \item \textbf{Aplicação Prática:} O jogo de cliques em grafos ($K_N \to K_q$).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{O que são Jogos Maker-Breaker?}
+    \begin{block}{Definição Formal}
+        Um jogo Maker-Breaker é definido por um par $(X, \mathcal{F})$, onde:
+        \begin{itemize}
+            \item $X$ é um conjunto finito (o \textbf{tabuleiro}).
+            \item $\mathcal{F} \subseteq 2^X$ é uma família de subconjuntos de $X$ (os \textbf{conjuntos vencedores}).
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Regras e Dinâmica}
+        \begin{itemize}
+            \item \textbf{Maker} e \textbf{Breaker} alternam turnos escolhendo um elemento livre $x \in X$.
+            \item O \textbf{Maker} vence se conseguir ocupar integralmente algum conjunto $A \in \mathcal{F}$.
+            \item O \textbf{Breaker} vence (ou empata o jogo simétrico) se conseguir colocar pelo menos uma de suas marcas em TODOS os conjuntos de $\mathcal{F}$, impedindo o Maker de vencer.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{O Critério de Erdős-Selfridge (1973)}
+    \begin{block}{Teorema Principal}
+        Em um jogo Maker-Breaker sobre o hipergrafo $\mathcal{F}$, se o Maker joga primeiro e a seguinte desigualdade estrita é satisfeita:
+        \begin{equation*}
+            \sum_{A \in \mathcal{F}} 2^{-|A|} < \frac{1}{2}
+        \end{equation*}
+        então o \textbf{Breaker possui uma estratégia vencedora} (ele consegue impedir a vitória do Maker, independentemente de quão bem o Maker jogue).
+    \end{block}
+    \vspace{0.5cm}
+    \textit{Nota: Se o Breaker fosse o primeiro a jogar, o lado direito da desigualdade seria $1$.}
+\end{frame}
+
+\begin{frame}{Técnica A: A Função Potencial}
+    Para provar o teorema, Erdős e Selfridge introduziram uma \textbf{função potencial} (um método "quase-probabilístico") para avaliar o estado do jogo.
+    
+    \begin{block}{Definindo o Peso (Potencial)}
+        Após a rodada $i$, sejam $M_i$ as peças do Maker e $B_i$ as do Breaker.
+        Um conjunto $A \in \mathcal{F}$ está \textbf{ativo} (ou sobrevivente) se $A \cap B_i = \emptyset$.
+        O potencial do tabuleiro é a soma dos pesos dos conjuntos ativos:
+        \begin{equation*}
+            \Phi_i = \sum_{\substack{A \in \mathcal{F} \\ A \cap B_i = \emptyset}} 2^{-|A \setminus M_i|}
+        \end{equation*}
+    \end{block}
+    
+    \begin{itemize}
+        \item O expoente $|A \setminus M_i|$ é o número de peças que \textbf{faltam} para o Maker completar $A$.
+        \item Quanto mais perto o Maker está de completar o conjunto, maior o seu peso.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Dinâmica das Jogadas: O Turno do Maker}
+    \begin{itemize}
+        \item No início do jogo (rodada 0), o potencial é estritamente menor que $1/2$ (por hipótese): 
+        $$\Phi_0 = \sum_{A \in \mathcal{F}} 2^{-|A|} < 1/2$$
+        \item \textbf{Ação do Maker:} O Maker escolhe um elemento $x$.
+        \item Para todo conjunto ativo $A$ que contém $x$, o número de elementos faltantes cai em $1$.
+        \item O peso desse conjunto passa de $2^{-r}$ para $2^{-(r-1)} = 2 \times 2^{-r}$. O peso \textbf{dobra}.
+        \item O aumento total no potencial gerado pelo Maker é exatamente a soma dos pesos locais de $x$:
+        $$\Delta_{Maker} = \sum_{\substack{A \in \mathcal{F}, A \cap B_i = \emptyset \\ x \in A}} 2^{-|A \setminus M_i|}$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Dinâmica das Jogadas: A Estratégia Gulosa do Breaker}
+    \begin{itemize}
+        \item Após a jogada do Maker, o potencial momentâneo é $\Phi_{i+0.5} = \Phi_i + \Delta_{Maker}$.
+        \item Como $\Phi_0 < 1/2$ e a primeira jogada no máximo dobra esse valor, temos que $\Phi_{0.5} < 1$.
+        \item \textbf{Ação do Breaker (Estratégia Gulosa):} O Breaker calcula o \textit{peso local} de todos os vértices livres $y$ e \textbf{escolhe aquele com o maior peso}.
+        \item Ao escolher $y$, o Breaker "destrói" todos os conjuntos ativos que continham $y$, reduzindo o potencial do jogo em um montante $\Delta_{Breaker} = w(y)$.
+        \item Como o Breaker escolhe o \textbf{máximo} disponível e o Maker já gastou sua jogada, matematicamente garante-se que:
+        $$\Delta_{Breaker} \ge \Delta_{Maker}$$
+        $$\implies \Phi_{i+1} \le \Phi_i$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusão da Demonstração por Contradição}
+    \begin{block}{O Fechamento da Prova}
+        \begin{itemize}
+            \item Provamos que o potencial $\Phi$ nunca ultrapassa seu valor após a primeira jogada do Maker ($\Phi_{0.5} < 1$).
+            \item Logo, o potencial \textbf{sempre permanecerá estritamente menor que 1}.
+            \item Se o Maker vencesse na rodada $k$, ele teria ocupado inteiramente um conjunto $A^*$.
+            \item O número de elementos faltantes em $A^*$ seria zero, e seu peso seria $2^{-0} = 1$.
+            \item Isso forçaria o potencial total $\Phi_k$ a ser \textbf{pelo menos 1}.
+            \item \textbf{Contradição!} Portanto, o Maker nunca poderá vencer. $\blacksquare$
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Técnica B: Construção Extremal (O limite é ótimo?)}
+    O artigo não apenas dá o critério, mas prova que a constante é \textbf{exata}.
+    
+    Seja $m^*(r)$ o menor número de conjuntos de tamanho $r$ necessários para garantir a vitória do primeiro jogador em um jogo onde as regras favoreçam a vitória.
+    
+    \begin{block}{Teorema da Construção Extremal}
+        $$m^*(r) = 2^{r-1}$$
+    \end{block}
+    A cota inferior $m^*(r) > 2^{r-1}-1$ vem diretamente do método do potencial. A igualdade é obtida construindo um hipergrafo onde o Maker possui uma estratégia inescapável, usando \textbf{indução no número de caixas/conjuntos}.
+\end{frame}
+
+\begin{frame}{O Passo Indutivo da Construção Extremal}
+    \begin{block}{Como forçar a vitória do Maker (Indução)}
+        \begin{enumerate}
+            \item \textbf{Base:} Para $r=1$, um único conjunto $A=\{x\}$ garante vitória imediata ($2^0=1$).
+            \item \textbf{Passo Indutivo:} Assuma que podemos construir uma família $\mathcal{H}_{r-1}$ com $2^{r-2}$ conjuntos que dá vitória ao primeiro jogador.
+            \item Para criar $\mathcal{H}_r$, tome \textbf{duas cópias disjuntas} de $\mathcal{H}_{r-1}$ ($C_1$ e $C_2$).
+            \item Adicione um vértice central (raiz) $x_0$ a todos os conjuntos de $C_1$ e $C_2$. O total de conjuntos agora é $2^{r-2} + 2^{r-2} = 2^{r-1}$, todos de tamanho $r$.
+        \end{enumerate}
+    \end{block}
+    \textbf{Estratégia:} O Maker joga em $x_0$. O Breaker responde, caindo em $C_1$ ou $C_2$ (mas nunca em ambos). O Maker ignora a cópia que o Breaker jogou e foca na outra. Como o Breaker desperdiçou a jogada, o Maker agora joga como "primeiro" na cópia limpa, vencendo por indução!
+\end{frame}
+
+\begin{frame}{Técnica C: Aplicação à Família de Cliques}
+    Como aplicar isso para evitar a árvore de decisão e o "caos combinatório" de jogos em grafos?
+    
+    \begin{block}{O Jogo da Camarilha (Clique Game)}
+        \begin{itemize}
+            \item \textbf{Tabuleiro $X$:} Todas as arestas do grafo completo $K_N$ (Tamanho: $\binom{N}{2}$).
+            \item \textbf{Objetivo do Maker:} Colorir arestas formando um clique $K_q$ completo.
+            \item \textbf{Família $\mathcal{F}$:} Todos os possíveis cliques $K_q$ contidos em $K_N$.
+        \end{itemize}
+    \end{block}
+    
+    Quantos conjuntos vencedores existem? $\binom{N}{q}$.
+    Qual o tamanho de cada conjunto vencedor? $\binom{q}{2}$.
+\end{frame}
+
+\begin{frame}{O Ponto de Quebra (Breaking Point)}
+    Substituindo os valores no Critério de Erdős-Selfridge, o Breaker vence se:
+    \begin{equation*}
+        \sum_{A \in \mathcal{F}} 2^{-|A|} = \binom{N}{q} 2^{-\binom{q}{2}} < \frac{1}{2}
+    \end{equation*}
+    
+    Para encontrar o limite assintótico:
+    \begin{itemize}
+        \item Aproximamos $\binom{N}{q} \approx \left(\frac{eN}{q}\right)^q \approx N^q$.
+        \item A inequação vira $N^q \cdot 2^{-q^2/2} \approx 1/2$.
+        \item Aplicando logaritmo na base 2: $q \log_2(N) - q^2/2 \approx -1$.
+        \item Dividindo por $q$, obtemos a relação crítica:
+    \end{itemize}
+    \begin{alertblock}{O Limiar de Vitória}
+        $q \approx 2 \log_2(N)$
+    \end{alertblock}
+    Acima desse tamanho de camarilha $q$, o Breaker sempre pode impedir o Maker usando puramente a estratégia do potencial!
+\end{frame}
+
+\begin{frame}{Conclusão}
+    \begin{itemize}
+        \item \textbf{Poder do Global sobre o Local:} O método do potencial avalia o estado geral do jogo de forma contínua, evitando o cálculo impossível de todas as respostas futuras.
+        \item \textbf{O Nascimento do Método Quase-Probabilístico:} É uma ponte histórica entre a lógica de jogos determinísticos e a Teoria Probabilística.
+        \item \textbf{Próximos Passos (Seminários 2 e 3):} O que acontece quando o jogo se torna \textbf{enviesado} ($a:b$)? Introduziremos os Box Games e os potenciais ponderados de Beck!
+    \end{itemize}
+    
+    \vspace{1cm}
+    \begin{center}
+        \textbf{Obrigado!}
+    \end{center}
+\end{frame}
+
+\end{document}
