@@ -56,7 +56,7 @@
         \begin{itemize}
             \item \textbf{Maker} e \textbf{Breaker} alternam turnos escolhendo um elemento livre $x \in X$.
             \item O \textbf{Maker} vence se conseguir ocupar integralmente algum conjunto $A \in \mathcal{F}$.
-            \item O \textbf{Breaker} vence (ou empata o jogo simétrico) se conseguir colocar pelo menos uma de suas marcas em TODOS os conjuntos de $\mathcal{F}$, impedindo o Maker de vencer.
+            \item O \textbf{Breaker} vence se conseguir colocar pelo menos uma de suas marcas em TODOS os conjuntos de $\mathcal{F}$, impedindo o Maker de vencer.
         \end{itemize}
     \end{block}
 \end{frame}
@@ -129,18 +129,20 @@
 \end{frame}
 
 \begin{frame}{Técnica B: Construção Extremal (O limite é ótimo?)}
-    O artigo não apenas dá o critério, mas prova que a constante é \textbf{exata}.
-    
-    Seja $m^*(r)$ o menor número de conjuntos de tamanho $r$ necessários para garantir a vitória do primeiro jogador em um jogo onde as regras favoreçam a vitória.
-    
+    \textbf{Mudança de jogo:} até aqui o jogo era Maker--Breaker; nesta técnica passamos ao \textbf{jogo simétrico}, também considerado no artigo. Os dois jogadores tentam completar um conjunto de $\mathcal{F}$, e vence quem o fizer \textbf{primeiro} (não há papéis de Maker e Breaker).
+
+    Seja $m^*(r)$ o menor número de conjuntos de tamanho $r$ que permite ao \textbf{primeiro jogador} forçar a vitória no jogo simétrico.
+
     \begin{block}{Teorema da Construção Extremal}
         $$m^*(r) = 2^{r-1}$$
     \end{block}
-    A cota inferior $m^*(r) > 2^{r-1}-1$ vem diretamente do método do potencial. A igualdade é obtida construindo um hipergrafo onde o Maker possui uma estratégia inescapável, usando \textbf{indução no número de caixas/conjuntos}.
+    \textbf{Cota inferior:} se $|\mathcal{F}| < 2^{r-1}$, então $\sum_{A \in \mathcal{F}} 2^{-|A|} < 1/2$. O segundo jogador pode apenas bloquear, com a estratégia gulosa da Técnica A; assim o primeiro jogador nunca completa um conjunto e não vence.
+
+    \textbf{Cota superior:} construímos uma família com $2^{r-1}$ conjuntos na qual o primeiro jogador vence, por \textbf{indução em $r$}.
 \end{frame}
 
 \begin{frame}{O Passo Indutivo da Construção Extremal}
-    \begin{block}{Como forçar a vitória do Maker (Indução)}
+    \begin{block}{Como forçar a vitória do primeiro jogador (Indução)}
         \begin{enumerate}
             \item \textbf{Base:} Para $r=1$, um único conjunto $A=\{x\}$ garante vitória imediata ($2^0=1$).
             \item \textbf{Passo Indutivo:} Assuma que podemos construir uma família $\mathcal{H}_{r-1}$ com $2^{r-2}$ conjuntos que dá vitória ao primeiro jogador.
@@ -148,7 +150,9 @@
             \item Adicione um vértice central (raiz) $x_0$ a todos os conjuntos de $C_1$ e $C_2$. O total de conjuntos agora é $2^{r-2} + 2^{r-2} = 2^{r-1}$, todos de tamanho $r$.
         \end{enumerate}
     \end{block}
-    \textbf{Estratégia:} O Maker joga em $x_0$. O Breaker responde, caindo em $C_1$ ou $C_2$ (mas nunca em ambos). O Maker ignora a cópia que o Breaker jogou e foca na outra. Como o Breaker desperdiçou a jogada, o Maker agora joga como "primeiro" na cópia limpa, vencendo por indução!
+    \textbf{Estratégia:} O primeiro jogador ocupa $x_0$. O segundo responde em $C_1$ ou em $C_2$ (nunca em ambos). O primeiro ignora essa cópia e passa a jogar como ``primeiro'' na cópia limpa, vencendo por indução.
+
+    \textbf{Por que o segundo jogador não vence antes?} Todo conjunto contém $x_0$, que pertence ao primeiro jogador; logo o segundo nunca completa conjunto algum.
 \end{frame}
 
 \begin{frame}{Técnica C: Aplicação à Família de Cliques}
